@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Werbedetektive</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+<style>
+@font-face { font-family: Andika; src: url(fonts/andika-400.woff2) format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: Andika; src: url(fonts/andika-700.woff2) format('woff2'); font-weight: 700; font-display: swap; }
+
+:root {
+  --bg: #fff8ec;
+  --card: #ffffff;
+  --ink: #23201c;
+  --muted: #6b645b;
+  --line: #eadfcb;
+  --accent: #2f6fdf;
+  --g1: #e5483b; --g2: #f08a1c; --g3: #b88600; --g4: #3a9a4b; --g5: #2f6fdf; --g6: #8a4fd1;
+  --gc: var(--accent);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Andika, "Comic Sans MS", system-ui, sans-serif;
+  font-size: 20px;
+  line-height: 1.4;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none;
+  min-height: 100vh;
+}
+button { font: inherit; color: inherit; cursor: pointer; border: 0; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 24px 20px 40px; }
+[hidden] { display: none !important; }
+
+/* Start */
+.hero { text-align: center; margin: 12px 0 28px; }
+.hero .badge { display: inline-block; background: var(--ink); color: #fff; border-radius: 999px; padding: 4px 16px; font-size: 18px; letter-spacing: .04em; }
+.hero h1 { font-size: clamp(34px, 5vw, 54px); line-height: 1.1; margin: 14px 0 8px; }
+.hero p { margin: 0; color: var(--muted); font-size: 22px; }
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 720px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+.tile {
+  background: var(--card); border-radius: 22px; padding: 22px 12px;
+  border: 4px solid var(--gc); box-shadow: 0 6px 0 var(--gc);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  transition: transform .08s;
+}
+.tile:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--gc); }
+.sym { font-family: system-ui, -apple-system, sans-serif; }
+.tile .sym { width: 72px; height: 72px; border-radius: 50%; background: var(--gc); color: #fff; display: grid; place-items: center; font-size: 40px; }
+.tile .name { font-size: 30px; font-weight: 700; }
+
+/* Gruppe */
+.top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.top .sym { width: 56px; height: 56px; border-radius: 50%; background: var(--gc); color: #fff; display: grid; place-items: center; font-size: 30px; flex: none; }
+.top h1 { margin: 0; font-size: 34px; line-height: 1.1; }
+.top .sub { color: var(--muted); font-size: 19px; }
+.back {
+  margin-left: auto; position: relative; overflow: hidden;
+  background: #efe6d6; color: var(--muted); border-radius: 14px; padding: 10px 14px; font-size: 15px; line-height: 1.2; text-align: center;
+}
+.back .fill { position: absolute; inset: 0; background: rgba(0,0,0,.12); transform-origin: left; transform: scaleX(0); }
+.back.holding .fill { transform: scaleX(1); transition: transform 1.5s linear; }
+
+.grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 22px; align-items: start; }
+@media (orientation: portrait), (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+.player { background: var(--card); border-radius: 22px; padding: 14px; border: 3px solid var(--line); position: sticky; top: 12px; }
+.screen { position: relative; background: #000; border-radius: 14px; overflow: hidden; aspect-ratio: 16 / 9; }
+.screen video { width: 100%; height: 100%; display: block; background: #000; }
+.screen .msg { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: 22px; text-align: center; padding: 20px; }
+.ctrls { display: flex; gap: 12px; margin-top: 12px; }
+.ctrls button { flex: 1; border-radius: 16px; padding: 14px 10px; font-size: 22px; font-weight: 700; background: var(--gc); color: #fff; }
+.ctrls button.alt { background: #efe6d6; color: var(--ink); }
+.ctrls button:disabled { opacity: .45; }
+.quiet { margin: 12px 0 0; background: #fff1c9; border-radius: 14px; padding: 10px 14px; font-size: 19px; }
+
+.tasks { display: flex; flex-direction: column; gap: 14px; }
+.intro { background: var(--card); border-radius: 18px; padding: 14px 16px; border: 3px solid var(--line); }
+.intro b { color: var(--gc); }
+.task { background: var(--card); border-radius: 18px; padding: 14px 16px; border: 3px solid var(--line); }
+.task.star { border-color: #e8b80c; background: #fffaf0; }
+.task .head { display: flex; gap: 12px; align-items: flex-start; }
+.task .num { flex: none; width: 42px; height: 42px; border-radius: 50%; background: var(--gc); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 22px; }
+.task.star .num { background: #e8b80c; }
+.task .q { flex: 1; font-size: 22px; font-weight: 700; padding-top: 4px; }
+.task .q small { display: block; font-weight: 400; color: var(--muted); font-size: 18px; }
+.task .btns { display: flex; gap: 10px; margin-top: 10px; padding-left: 54px; }
+.task .btns button { border-radius: 12px; padding: 8px 14px; font-size: 18px; background: #efe6d6; }
+.task .btns button.on { background: var(--gc); color: #fff; }
+.tip { margin: 10px 0 0 54px; background: #eef4ff; border-left: 6px solid var(--accent); border-radius: 10px; padding: 10px 14px; font-size: 19px; }
+.tip .start { display: block; margin-top: 6px; font-style: italic; }
+.paper { text-align: center; color: var(--muted); font-size: 18px; }
+
+/* Sperre */
+.lock { max-width: 460px; margin: 12vh auto 0; background: var(--card); border-radius: 22px; padding: 28px; border: 3px solid var(--line); text-align: center; }
+.lock h1 { margin: 6px 0 4px; font-size: 30px; }
+.lock p { color: var(--muted); margin: 0 0 18px; font-size: 18px; }
+.lock input { width: 100%; font: inherit; font-size: 24px; padding: 12px 14px; border-radius: 14px; border: 3px solid var(--line); text-align: center; -webkit-user-select: text; user-select: text; }
+.lock button { margin-top: 14px; width: 100%; border-radius: 14px; padding: 14px; font-size: 22px; font-weight: 700; background: var(--accent); color: #fff; }
+.lock .err { color: #c0392b; min-height: 1.4em; margin-top: 10px; font-size: 18px; }
+.foot { text-align: center; color: var(--muted); font-size: 14px; margin-top: 30px; }
+</style>
+</head>
+<body>
+
+<div id="lock" class="lock" hidden>
+  <div style="font-size:48px">🔍</div>
+  <h1>Werbedetektive</h1>
+  <p>Für Lehrkräfte: Bitte Passwort eingeben.<br>Das iPad merkt es sich danach.</p>
+  <form id="lockForm" autocomplete="off">
+    <input id="pw" type="password" inputmode="text" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Passwort">
+    <button type="submit">Öffnen</button>
+  </form>
+  <div id="err" class="err" role="alert"></div>
+</div>
+
+<div id="home" class="wrap" hidden>
+  <header class="hero">
+    <span class="badge">🔍 WERBEDETEKTIVE</span>
+    <h1>Können wir Werbung immer glauben?</h1>
+    <p>Tippt auf eure Gruppe.</p>
+  </header>
+  <nav class="tiles" id="tiles"></nav>
+  <p class="foot">Diese Seite speichert nichts und sammelt keine Daten.</p>
+</div>
+
+<div id="group" class="wrap" hidden>
+  <div class="top">
+    <div class="sym" id="gSym"></div>
+    <div>
+      <h1 id="gName"></h1>
+      <div class="sub">Euer Detektiv-Auftrag</div>
+    </div>
+    <button class="back" id="back" aria-label="Zur Übersicht, gedrückt halten"><span class="fill"></span><span style="position:relative">⬅ Übersicht<br><small>gedrückt halten</small></span></button>
+  </div>
+
+  <div class="grid">
+    <section class="player">
+      <div class="screen">
+        <video id="vid" playsinline webkit-playsinline preload="auto" controls controlslist="nodownload noplaybackrate noremoteplayback" disablepictureinpicture disableremoteplayback></video>
+        <div class="msg" id="vMsg">Video wird geladen …</div>
+      </div>
+      <div class="ctrls">
+        <button id="play" disabled>▶ Abspielen</button>
+        <button id="again" class="alt" disabled>↺ Von vorne</button>
+      </div>
+      <p class="quiet">🤫 Sprecht leise. Ihr dürft den Spot so oft anschauen, wie ihr wollt.</p>
+    </section>
+
+    <section class="tasks" id="tasks"></section>
+  </div>
+</div>
+
+<script>
+'use strict';
+const GROUPS = [
+  { sym: '●', tips: [
+      'Schaut auf das Ende vom Spot. Dort seht ihr die Box und das Logo.',
+      'Schaut auf die Kinder und den Papa. Wie fühlen sie sich, als die Box aufgeht?',
+      'Was passiert mit der Box und im Auto? Kann das wirklich passieren?',
+      'Was ist wirklich in der Box drin?'] },
+  { sym: '▲', tips: [
+      'Schaut auf die Flaschen am Ende vom Spot.',
+      'Was passiert, wenn der Mann die richtige Flasche findet? Was will er haben?',
+      'Hört genau hin! Welches Geräusch macht die Flasche? Kann eine Flasche das?',
+      'Was ist wirklich in der Flasche drin?'] },
+  { sym: '■', tips: [
+      'Schaut auf die Flaschen am Ende vom Spot. Hört auf den letzten Satz.',
+      'Was sagt die Werbung über den Saft? Was soll er für euch tun?',
+      'Schaut auf die Kuscheltiere und Puppen. Was machen sie? Können sie das wirklich?',
+      'Was ist wirklich im Saft drin? Hört genau hin.'] },
+  { sym: '★', tips: [
+      'Schaut auf die Tüte am Ende vom Spot.',
+      'Lest die Wörter am Ende. Was sollen die Bonbons sein?',
+      'Schaut auf die Gesichter der Kinder. Was passiert mit ihren Wangen?',
+      'Was steht auf der Tüte? Was ist in den Bonbons drin?'] },
+  { sym: '♥', tips: [
+      'Schaut auf die Schuhe am Ende vom Spot.',
+      'Was können die Schuhe laut Werbung? Was schafft der Mann mit den Schuhen?',
+      'Wer ist schneller, der Mann oder der Gepard? Kann ein Mensch so schnell laufen?',
+      'Wofür sind Laufschuhe wirklich gut?'] },
+  { sym: '◆', tips: [
+      'Schaut auf die Packungen ganz am Ende vom Spot. Lest den Satz unten.',
+      'Was soll der Kaugummi mit euren Zähnen machen?',
+      'Was macht der Junge mit dem Teller? Könntest du das?',
+      'Was kann Kaugummikauen für die Zähne wirklich tun?'] },
+];
+const QUESTIONS = [
+  { q: 'Was wird verkauft?', sub: 'Wie heißt die Marke? Gibt es einen Slogan?', start: 'Verkauft wird … Die Marke heißt … Der Slogan ist …' },
+  { q: 'Was verspricht die Werbung?', sub: 'Was soll das Produkt für dich tun?', start: 'Die Werbung verspricht, dass …' },
+  { q: 'Was ist übertrieben oder erfunden?', sub: 'Was kann es in echt nicht geben?', start: 'Erfunden ist, dass …' },
+  { q: 'Was ist echt?', sub: 'Was stimmt wirklich?', start: 'Echt ist, dass …' },
+];
+const STAR = { q: 'Expertenaufgabe: Glaubt ihr der Werbung?', sub: 'Warum? Warum nicht? Würdet ihr das kaufen?', tip: 'Denkt an die Super-Limo!', start: 'Wir glauben der Werbung (nicht), weil …' };
+const PW_KEY = 'wd-pw';
+
+const $ = (id) => document.getElementById(id);
+const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+let meta = null, key = null, videoUrl = null;
+
+function store(get, val) {
+  try { return get ? localStorage.getItem(PW_KEY) : (val === null ? localStorage.removeItem(PW_KEY) : localStorage.setItem(PW_KEY, val)); }
+  catch (e) { return null; }
+}
+
+async function deriveKey(pw) {
+  if (!meta) meta = await (await fetch('videos/meta.json')).json();
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+  const k = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: b64(meta.salt), iterations: meta.iterations, hash: 'SHA-256' },
+    base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  await open(k, b64(meta.check)); // wirft bei falschem Passwort
+  return k;
+}
+function open(k, bytes) {
+  return crypto.subtle.decrypt({ name: 'AES-GCM', iv: bytes.subarray(0, 12) }, k, bytes.subarray(12));
+}
+
+async function unlock(pw) {
+  try { key = await deriveKey(pw); store(false, pw); return true; }
+  catch (e) { return false; }
+}
+
+function show(id) { for (const v of ['lock', 'home', 'group']) $(v).hidden = v !== id; window.scrollTo(0, 0); }
+
+function renderHome() {
+  const t = $('tiles');
+  t.innerHTML = '';
+  GROUPS.forEach((g, i) => {
+    const b = document.createElement('button');
+    b.className = 'tile';
+    b.style.setProperty('--gc', `var(--g${i + 1})`);
+    b.innerHTML = `<span class="sym">${g.sym}</span><span class="name">Gruppe ${i + 1}</span>`;
+    b.onclick = () => { location.hash = `gruppe-${i + 1}`; };
+    t.appendChild(b);
+  });
+  show('home');
+}
+
+function say(text, btn) {
+  if (!('speechSynthesis' in window)) return;
+  const s = window.speechSynthesis;
+  const wasOn = btn.classList.contains('on');
+  s.cancel();
+  document.querySelectorAll('.btns .say.on').forEach((x) => x.classList.remove('on'));
+  if (wasOn) return;
+  const u = new SpeechSynthesisUtterance(text.replace(/…/g, ''));
+  u.lang = 'de-DE';
+  u.rate = 0.85;
+  const v = s.getVoices().find((x) => x.lang && x.lang.toLowerCase().startsWith('de'));
+  if (v) u.voice = v;
+  u.onend = u.onerror = () => btn.classList.remove('on');
+  btn.classList.add('on');
+  s.speak(u);
+}
+
+function taskCard(n, q, tip, start, star) {
+  const el = document.createElement('article');
+  el.className = 'task' + (star ? ' star' : '');
+  el.innerHTML = `
+    <div class="head"><span class="num">${star ? '⭐' : n}</span><div class="q">${q.q}<small>${q.sub}</small></div></div>
+    <div class="btns"><button class="say">🔊 Vorlesen</button><button class="hint">💡 Tipp</button></div>
+    <div class="tip" hidden>${tip}<span class="start">${start}</span></div>`;
+  const tipEl = el.querySelector('.tip');
+  el.querySelector('.say').onclick = (e) => say(tipEl.hidden ? `${q.q} ${q.sub}` : `${q.q} ${q.sub} Tipp. ${tip} ${start}`, e.currentTarget);
+  el.querySelector('.hint').onclick = (e) => {
+    tipEl.hidden = !tipEl.hidden;
+    e.currentTarget.classList.toggle('on', !tipEl.hidden);
+  };
+  return el;
+}
+
+async function renderGroup(i) {
+  const g = GROUPS[i];
+  document.body.style.setProperty('--gc', `var(--g${i + 1})`);
+  $('gSym').textContent = g.sym;
+  $('gName').textContent = `Gruppe ${i + 1}`;
+
+  const tasks = $('tasks');
+  tasks.innerHTML = `<div class="intro">🔍 <b>So geht's:</b> Schaut euch den Spot an. Sprecht über die Fragen. Schreibt eure Antworten auf den <b>Detektiv-Bogen</b>.</div>`;
+  QUESTIONS.forEach((q, k) => tasks.appendChild(taskCard(k + 1, q, g.tips[k], q.start)));
+  tasks.appendChild(taskCard(0, STAR, STAR.tip, STAR.start, true));
+  const p = document.createElement('p');
+  p.className = 'paper';
+  p.textContent = 'Fertig? Übt, wer was bei der Präsentation sagt.';
+  tasks.appendChild(p);
+  show('group');
+
+  const vid = $('vid');
+  vid.pause();
+  vid.removeAttribute('src');
+  vid.load();
+  if (videoUrl) { URL.revokeObjectURL(videoUrl); videoUrl = null; }
+  $('play').disabled = $('again').disabled = true;
+  $('vMsg').hidden = false;
+  $('vMsg').textContent = 'Video wird geladen …';
+  try {
+    const res = await fetch(`videos/g${i + 1}.bin`);
+    if (!res.ok) throw new Error(res.status);
+    const plain = await open(key, new Uint8Array(await res.arrayBuffer()));
+    if (location.hash !== `#gruppe-${i + 1}`) return;
+    videoUrl = URL.createObjectURL(new Blob([plain], { type: 'video/mp4' }));
+    vid.src = videoUrl;
+    vid.load();
+    $('vMsg').hidden = true;
+    $('play').disabled = $('again').disabled = false;
+  } catch (e) {
+    $('vMsg').textContent = 'Das Video lädt nicht. Bitte der Lehrerin Bescheid sagen.';
+  }
+}
+
+function route() {
+  if (!key) return;
+  const m = location.hash.match(/^#gruppe-([1-6])$/);
+  if (m) renderGroup(+m[1] - 1); else renderHome();
+}
+
+// Video-Knöpfe
+const vid = $('vid');
+$('play').onclick = () => { vid.paused ? vid.play() : vid.pause(); };
+$('again').onclick = () => { vid.currentTime = 0; vid.play(); };
+vid.addEventListener('play', () => { $('play').textContent = '⏸ Pause'; });
+vid.addEventListener('pause', () => { $('play').textContent = '▶ Abspielen'; });
+vid.addEventListener('ended', () => { $('play').textContent = '▶ Abspielen'; });
+vid.addEventListener('contextmenu', (e) => e.preventDefault());
+
+// Zurück nur mit langem Drücken, damit niemand aus Versehen die Gruppe wechselt
+let holdTimer = null;
+const back = $('back');
+const startHold = (e) => {
+  e.preventDefault();
+  back.classList.add('holding');
+  holdTimer = setTimeout(() => {
+    back.classList.remove('holding');
+    vid.pause();
+    window.speechSynthesis && speechSynthesis.cancel();
+    location.hash = '';
+  }, 1500);
+};
+const endHold = () => { clearTimeout(holdTimer); back.classList.remove('holding'); };
+back.addEventListener('pointerdown', startHold);
+for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) back.addEventListener(ev, endHold);
+back.addEventListener('click', (e) => e.preventDefault());
+
+$('lockForm').onsubmit = async (e) => {
+  e.preventDefault();
+  $('err').textContent = 'Einen Moment …';
+  if (await unlock($('pw').value.trim())) { $('pw').value = ''; $('err').textContent = ''; route(); }
+  else $('err').textContent = 'Das Passwort stimmt nicht.';
+};
+
+window.addEventListener('hashchange', route);
+
+(async function start() {
+  // Link mit #k=PASSWORT entsperrt direkt und entfernt das Passwort aus der Adresszeile
+  const m = location.hash.match(/^#k=(.+)$/);
+  let pw = m ? decodeURIComponent(m[1]) : store(true);
+  if (m) history.replaceState(null, '', location.pathname);
+  if (pw && await unlock(pw)) route();
+  else { if (!m) store(false, null); show('lock'); }
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+  if ('speechSynthesis' in window) speechSynthesis.getVoices();
+})();
+</script>
+</body>
+</html>
