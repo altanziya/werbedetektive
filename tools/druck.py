@@ -1,42 +1,15 @@
 """Erzeugt die Druckmaterialien als HTML und druckt sie mit Chrome headless zu PDF."""
-import subprocess, pathlib, sys
+import subprocess, pathlib, sys, os, json, re
 
 HERE = pathlib.Path(__file__).parent
+ROOT = HERE.parent
 OUT = pathlib.Path(sys.argv[1])
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
-G = [  # Farbe, Symbol, Spot, Tipps (wie auf der Seite)
-    ("#e5483b", "●", "McDonald's Happy Meal", [
-        "Schaut auf das Ende vom Spot. Dort seht ihr die Box und das Logo.",
-        "Schaut auf die Kinder und den Papa. Wie fühlen sie sich, als die Box aufgeht?",
-        "Was passiert mit der Box und im Auto? Kann das wirklich passieren?",
-        "Was ist wirklich in der Box drin?"]),
-    ("#f08a1c", "▲", "Müllermilch", [
-        "Schaut auf die Flaschen am Ende vom Spot. Lest das rote Schild.",
-        "Was kann man gewinnen, wenn man Müllermilch kauft?",
-        "Wie schnell findet die Frau die Gewinner-Flasche? Geht das im Supermarkt so leicht?",
-        "Wie viele Flaschen muhen wirklich? Hört auf den Satz am Ende."]),
-    ("#b88600", "■", "hohes C", [
-        "Schaut auf die Flaschen am Ende vom Spot. Hört auf den letzten Satz.",
-        "Was sagt die Werbung über den Saft? Was soll er für euch tun?",
-        "Schaut auf die Kuscheltiere und Puppen. Was machen sie? Können sie das wirklich?",
-        "Was ist wirklich im Saft drin? Hört genau hin."]),
-    ("#3a9a4b", "★", "nimm2 soft", [
-        "Schaut auf die Tüte am Ende vom Spot.",
-        "Lest die Wörter am Ende. Was sollen die Bonbons sein?",
-        "Schaut auf die Gesichter der Kinder. Was passiert mit ihren Wangen?",
-        "Was steht auf der Tüte? Was ist in den Bonbons drin?"]),
-    ("#2f6fdf", "♥", "Skechers GOrun 2", [
-        "Schaut auf die Schuhe am Ende vom Spot.",
-        "Was können die Schuhe laut Werbung? Was schafft der Mann mit den Schuhen?",
-        "Wer ist schneller, der Mann oder der Gepard? Kann ein Mensch so schnell laufen?",
-        "Wofür sind Laufschuhe wirklich gut?"]),
-    ("#8a4fd1", "◆", "Wrigley's Extra", [
-        "Schaut auf die Packungen ganz am Ende vom Spot. Lest den Satz unten.",
-        "Was soll der Kaugummi mit euren Zähnen machen?",
-        "Was macht der Junge mit dem Teller? Könntest du das?",
-        "Was kann Kaugummikauen für die Zähne wirklich tun?"]),
-]
+TEXT = json.loads(re.search(r"/\*TEXT\*/(.*?)/\*TEXT\*/", (ROOT / "index.html").read_text(), re.S).group(1))
+COLORS = ["#e5483b", "#f08a1c", "#b88600", "#3a9a4b", "#2f6fdf", "#8a4fd1"]
+SPOTS = ["McDonald's Happy Meal", "Müllermilch", "hohes C", "nimm2 soft", "Skechers GOrun 2", "Wrigley's Extra"]
+G = [(c, g["sym"], s, g["tips"]) for c, g, s in zip(COLORS, TEXT["groups"], SPOTS)]  # Farbe, Symbol, Spot, Tipp 1 und 2 (wie auf der Seite)
 Q = [
     ("Was wird verkauft?", "Wie heißt die Marke? Gibt es einen Slogan?", ["Verkauft wird …", "Die Marke heißt …", "Der Slogan ist …"]),
     ("Was verspricht die Werbung?", "Was soll das Produkt für dich tun?", ["Die Werbung verspricht, dass …"]),
@@ -53,9 +26,9 @@ EH = [  # Erwartungshorizont der LiV
 ]
 
 BASE = """<!doctype html><html lang="de"><head><meta charset="utf-8"><title>{title}</title><style>
-@font-face {{ font-family: Andika; src: url(andika-400.woff2); font-weight: 400; }}
-@font-face {{ font-family: Andika; src: url(andika-700.woff2); font-weight: 700; }}
-@font-face {{ font-family: Fredoka; src: url(fredoka-600.woff2); font-weight: 600; }}
+@font-face {{ font-family: Andika; src: url({root}/fonts/andika-400.woff2); font-weight: 400; }}
+@font-face {{ font-family: Andika; src: url({root}/fonts/andika-700.woff2); font-weight: 700; }}
+@font-face {{ font-family: Fredoka; src: url({root}/fonts/fredoka-600.woff2); font-weight: 600; }}
 @page {{ size: A4 {orient}; margin: 12mm; }}
 * {{ box-sizing: border-box; }}
 body {{ margin: 0; font-family: Andika, sans-serif; color: #23201c; font-size: 15pt; line-height: 1.35; }}
@@ -73,12 +46,19 @@ def bogen(with_starts):
         if with_starts and len(starts) == 1:
             lines += '<div class="line"></div>'
         rows += f'<section class="q"><div class="h"><span class="n">{i}</span><div><b>{q}</b><br><small>{sub}</small></div></div>{lines}</section>'
-    star_line = '<div class="line">Wir glauben der Werbung (nicht), weil …</div>' if with_starts else '<div class="line"></div>'
-    rows += f'<section class="q star"><div class="h"><span class="n">⭐</span><div><b>Expertenaufgabe: Glaubt ihr der Werbung?</b><br><small>Warum? Warum nicht? Würdet ihr das kaufen?</small></div></div>{star_line}<div class="line"></div></section>'
     syms = "".join(f'<span class="box sym" style="color:{c}">{s}</span>' for c, s, *_ in G)
-    return f"""<div class="page"><header><img class="ed" src="eddie.svg" alt=""><div class="tt"><div class="badge">🔍 DETEKTIV-BOGEN</div><h1>Können wir Werbung immer glauben?</h1></div>
+    help_ = '<p class="help">📖 Ihr kennt ein Wort nicht? Eddie erklärt es auf dem iPad. &nbsp; 💡 Ihr kommt nicht weiter? Tippt auf dem iPad auf den Tipp.</p>'
+    front = f"""<div class="page"><header><img class="ed" src="{ROOT.as_uri()}/eddie.webp" alt=""><div class="tt"><div class="badge">🔍 DETEKTIV-BOGEN</div><h1>Können wir Werbung immer glauben?</h1></div>
 <div class="who">Gruppe: ______<br><span class="pick">Kreist euer Zeichen ein: {syms}</span></div></header>
-<p class="names">Unsere Namen: ________________________________________________</p>{rows}</div>"""
+<p class="names">Unsere Namen: ________________________________________________</p>{rows}{help_}<p class="turn">Fertig? Dreht das Blatt um. 🚀</p></div>"""
+    s = lambda t: t if with_starts else ""
+    back = f"""<div class="page"><header class="rk"><span class="rocket">🚀</span><div class="tt"><div class="badge">RAKETENAUFGABE</div><h1>Glaubt ihr der Werbung?</h1></div></header>
+<section class="q star"><div class="h"><span class="n">A</span><div><b>Glaubt ihr dem Versprechen der Werbung?</b><br><small>Warum? Warum nicht? Denkt an die Super-Limo.</small></div></div>
+<div class="line">{s("Wir glauben der Werbung (nicht), weil …")}</div><div class="line"></div><div class="line"></div></section>
+<section class="q star"><div class="h"><span class="n">B</span><div><b>Würdet ihr das Produkt kaufen?</b><br><small>Erklärt, warum.</small></div></div>
+<div class="line">{s("Wir würden es (nicht) kaufen, weil …")}</div><div class="line"></div></section>
+<section class="q star draw"><div class="h"><span class="n">⭐</span><div><b>Raketen-Plus: Wie sähe die Werbung aus, wenn sie nur die Wahrheit sagt?</b><br><small>Malt oder schreibt.</small></div></div><div class="canvas"></div></section></div>"""
+    return front + back
 
 
 bogen_css = """
@@ -98,6 +78,12 @@ h1, .nm, .lead, .w b, .top { font-family: Fredoka, Andika, sans-serif; font-weig
 .star .n { background: #e8b80c; }
 small { color: #6b645b; font-size: 12pt; }
 .line { border-bottom: 1.5px solid #9b917f; height: 40px; padding-top: 14px; color: #8a8273; font-style: italic; font-size: 13pt; }
+.help { margin: 8px 0 0; font-size: 11pt; color: #6b645b; }
+.turn { margin: 4px 0 0; text-align: right; font-weight: 700; }
+.rk { align-items: center; }
+.rocket { font-size: 46pt; line-height: 1; }
+.star { background: #fffbea; }
+.canvas { height: 95mm; border: 1.5px dashed #c9b98f; border-radius: 8px; margin: 8px 0 8px; background: #fff; }
 """
 
 
@@ -107,7 +93,7 @@ def schilder():
         cards = ""
         for j in (i, i + 1):
             c, s, *_ = G[j]
-            cards += f'<div class="card" style="border-color:{c}"><img class="ed2" src="eddie.svg" alt=""><div class="sym big" style="background:{c}">{s}</div><div class="nm">Gruppe {j + 1}</div></div>'
+            cards += f'<div class="card" style="border-color:{c}"><img class="ed2" src="{ROOT.as_uri()}/eddie.webp" alt=""><div class="sym big" style="background:{c}">{s}</div><div class="nm">Gruppe {j + 1}</div></div>'
         pages += f'<div class="page">{cards}</div>'
     return pages
 
@@ -128,8 +114,7 @@ def tippkarten():
         cards = ""
         for j in (i, i + 1):
             c, s, spot, tips = G[j]
-            items = "".join(f'<li><b>Tipp zu Frage {k}:</b> {t}<br><i>{Q[k - 1][2][0]}</i></li>' for k, t in enumerate(tips, 1))
-            items += '<li><b>Tipp zur Expertenaufgabe:</b> Denkt an die Super-Limo!<br><i>Wir glauben der Werbung (nicht), weil …</i></li>'
+            items = "".join(f'<li><b>Tipp {k}: {TEXT["tipHeads"][k - 1]}</b><br>{t}</li>' for k, t in enumerate(tips, 1))
             cards += f'<div class="card" style="border-color:{c}"><div class="top"><span class="sym s" style="background:{c}">{s}</span> 💡 Tippkarte Gruppe {j + 1}<span class="spot">{spot}</span></div><ul>{items}</ul><div class="cut">Reservekarte, falls das iPad streikt</div></div>'
         pages += f'<div class="page">{cards}</div>'
     return pages
@@ -141,14 +126,14 @@ tipp_css = """
 .top { font-size: 20pt; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .s { width: 34px; height: 34px; border-radius: 50%; color: #fff; display: inline-grid; place-items: center; font-size: 18pt; }
 .spot { margin-left: auto; font-size: 10pt; font-weight: 400; color: #8a8273; }
-ul { list-style: none; padding: 0; margin: 4mm 0 0; display: flex; flex-direction: column; gap: 3mm; font-size: 14pt; }
+ul { list-style: none; padding: 0; margin: 6mm 0 0; display: flex; flex-direction: column; gap: 7mm; font-size: 16pt; }
 i { color: #6b645b; }
 .cut { margin-top: auto; font-size: 9pt; color: #8a8273; text-align: right; }
 """
 
-WORDS = [("Produkt", "Das wird verkauft."), ("Marke", "So heißt die Firma."), ("Logo", "Das Zeichen der Marke."),
-         ("Slogan", "Ein kurzer Satz, den man sich merkt."), ("Versprechen", "Das soll das Produkt für dich tun."),
-         ("übertrieben", "Viel mehr, als es wirklich ist."), ("erfunden", "Das gibt es in echt nicht."), ("echt", "Das stimmt wirklich.")]
+WORDS = [("Produkt", "Eine Sache, die man kaufen kann."), ("Marke", "Der Name, den eine Firma ihren Sachen gibt."), ("Logo", "Das Zeichen der Marke."),
+         ("Slogan", "Ein kurzer Satz aus der Werbung, den man sich merkt."), ("Versprechen", "Das soll das Produkt für dich tun."),
+         ("übertrieben", "Viel größer, schneller oder besser, als es in echt ist."), ("erfunden", "Das gibt es in echt nicht."), ("echt", "Das stimmt wirklich.")]
 
 
 def wortspeicher():
@@ -184,6 +169,53 @@ th { background: #f3ecdf; }
 .src { font-size: 9pt; color: #6b645b; }
 """
 
+
+TB = [("Glück und Abenteuer", "Box wird zum Dschungel", "Spielfigur ist drin"),
+      ("50.000 Euro gewinnen ist leicht", "Gewinnerflasche sofort gefunden", "5 Flaschen muhen wirklich"),
+      ("Saft macht stark und gesund", "Kuscheltiere werden lebendig", "Vitamin C ist drin"),
+      ("Naschen ist gesund", "Wangen ploppen auf", "Vitamine sind zugesetzt"),
+      ("Schnell wie ein Gepard", "Mann überholt Gepard", "Bequeme Laufschuhe"),
+      ("Superstarke Zähne", "Junge beißt in Teller", "Kauen hilft den Zähnen")]
+
+
+def tafelbild():
+    rows = "".join(f'<tr><td><span class="sym d" style="background:{G[i][0]}">{G[i][1]}</span> {G[i][2]}</td><td>{a}</td><td>{b}</td><td>{c}</td></tr>' for i, (a, b, c) in enumerate(TB))
+    words = "".join(f"<li>{w}</li>" for w, _ in WORDS)
+    return f"""<div class="page"><div class="board"><h2>Können wir Werbung immer glauben?</h2>
+<div class="cols"><ul class="ws"><b>Wortspeicher</b>{words}</ul>
+<table><thead><tr><th>Spot</th><th>Das verspricht die Werbung</th><th>Übertrieben oder erfunden</th><th>Echt</th></tr></thead><tbody>{rows}</tbody></table></div>
+<p class="fazit">Werbung mischt Echtes mit Erfundenem. Sie will, dass wir kaufen.</p></div></div>"""
+
+
+tb_css = """
+.board { background: #2f4f3a; color: #fff; border: 5mm solid #8a5a2b; border-radius: 3mm; padding: 6mm 8mm; height: 170mm; font-family: Andika; }
+h2 { font-family: Fredoka; text-align: center; font-size: 24pt; margin: 0 0 4mm; }
+.cols { display: flex; gap: 6mm; }
+.ws { list-style: none; margin: 0; padding: 3mm 4mm; border: 1.5px dashed #fff; border-radius: 3mm; font-size: 12pt; min-width: 32mm; }
+.ws b { display: block; margin-bottom: 2mm; }
+table { flex: 1; border-collapse: collapse; font-size: 12pt; }
+th, td { border-bottom: 1.5px solid rgba(255,255,255,.6); padding: 2mm 3mm; text-align: left; }
+th { font-family: Fredoka; font-weight: 600; }
+.d { width: 20px; height: 20px; border-radius: 50%; color: #fff; display: inline-grid; place-items: center; font-size: 11pt; border: 1px solid #fff; }
+.fazit { margin: 6mm 0 0; text-align: center; font-size: 18pt; font-family: Fredoka; background: #fff3; border-radius: 3mm; padding: 3mm; }
+"""
+
+
+def lernumgebung():
+    return """<div class="page"><h1>Lernumgebung „Werbedetektive“</h1>
+<figure><img src="shot_home.png"><figcaption>Startseite mit Klassentier Eddie und Gruppenauswahl</figcaption></figure>
+<figure><img src="shot_gruppe.png"><figcaption>Gruppenansicht mit Spot, Arbeitsauftrag von Eddie, Wortspeicher zum Antippen und Vorlesen, Tipp-Feld</figcaption></figure>
+<figure><img src="shot_tipp.png"><figcaption>Tippseite der Gruppe mit zwei gestuften Denkanstößen zum Aufdecken und Vorlesen</figcaption></figure></div>"""
+
+
+lu_css = """
+h1 { font-family: Fredoka; font-size: 18pt; margin: 0 0 4mm; }
+figure { margin: 0 0 6mm; text-align: center; }
+img { width: 100mm; border: 1px solid #ccc; border-radius: 2mm; }
+figure { margin-bottom: 3mm !important; }
+figcaption { font-size: 10pt; color: #6b645b; margin-top: 1mm; }
+"""
+
 DOCS = [
     ("Detektivbogen_mit_Satzanfaengen", "portrait", bogen_css, bogen(True)),
     ("Detektivbogen_ohne_Satzanfaenge", "portrait", bogen_css, bogen(False)),
@@ -191,13 +223,25 @@ DOCS = [
     ("Tippkarten_Reserve", "portrait", tipp_css, tippkarten()),
     ("Leitfrage_und_Wortspeicher", "landscape", wort_css, wortspeicher()),
     ("Erwartungshorizont", "landscape", eh_css, erwartung()),
+    ("Tafelbild", "landscape", tb_css, tafelbild()),
+    ("Lernumgebung_Screenshots", "portrait", lu_css, lernumgebung()),
 ]
+LABEL = {"Detektivbogen_mit_Satzanfaengen": "Anhang 2: Detektivbogen mit Satzanfängen", "Detektivbogen_ohne_Satzanfaenge": "Anhang 3: Detektivbogen ohne Satzanfänge",
+         "Lernumgebung_Screenshots": "Anhang 4", "Tippkarten_Reserve": "Anhang 5: Tippkarten (Auszug, Gruppen 1 und 2)", "Erwartungshorizont": "Anhang 6",
+         "Tafelbild": "Anhang 7: Tafelbild (geplanter Endzustand)", "Leitfrage_und_Wortspeicher": "Anhang 8: Leitfrage und Wortspeicher"}
+ANH = os.environ.get("ANHANG") == "1"
+if ANH:
+    DOCS = [d for d in DOCS if d[0] in LABEL]
 
 OUT.mkdir(parents=True, exist_ok=True)
 for name, orient, css, body in DOCS:
     html = HERE / f"{name}.html"
-    html.write_text(BASE.format(title=name, orient=orient, css=css, body=body), encoding="utf-8")
-    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
+    if ANH:
+        body = f'<div class="anh">{LABEL[name]}</div>' + body
+        css += ".anh { font-family: 'Times New Roman', serif; font-size: 12pt; margin-bottom: 3mm; } .lead { height: 160mm !important; } .board { height: 160mm !important; } .grid { height: 165mm !important; } .line { height: 36px !important; padding-top: 12px !important; } .q { margin-top: 6px !important; } table { font-size: 10pt !important; } th, td { padding: 1.8mm !important; }"
+        if name == "Tippkarten_Reserve": css += ".page { height: 258mm !important; }"
+    html.write_text(BASE.format(root=ROOT.as_uri(), title=name, orient=orient, css=css, body=body), encoding="utf-8")
+    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", f"--user-data-dir={HERE / ".chrome"}", "--no-first-run",
                     f"--print-to-pdf={OUT / (name + '.pdf')}", html.as_uri()],
-                   check=True, capture_output=True)
+                   check=True, capture_output=True, timeout=60)
     print("ok", name)
