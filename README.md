@@ -7,3 +7,5 @@ Lernumgebung für eine Sachunterrichtsstunde (Klasse 3): Jede Gruppe sieht genau
 - Nach dem ersten Öffnen offline nutzbar (Service Worker).
 
 Spots neu verschlüsseln: `node tools/encrypt.mjs <ordner-mit-mp4s> <passwort>`, danach `CACHE` in `sw.js` hochzählen.
+
+Texte stehen im `TEXT`-Block in `index.html`. Nach jeder Textänderung die Stimme neu einsprechen (`pip install edge-tts`, dann `python3 tools/stimme.py`) und `CACHE` in `sw.js` hochzählen.

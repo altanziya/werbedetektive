@@ -45,7 +45,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; }
 
 /* Start */
 .hero { display: flex; align-items: center; gap: 18px; margin: 4px 0 26px; }
-.hero .eddie { width: 190px; flex: none; filter: drop-shadow(0 6px 0 rgba(59,42,30,.12)); cursor: pointer; }
+.hero .eddie { width: 200px; flex: none; filter: drop-shadow(0 6px 6px rgba(59,42,30,.25)); cursor: pointer; transform: rotate(-3deg); }
 .hero .side { flex: 1; text-align: left; }
 .bubble { position: relative; background: #fff; border: 4px solid #3b2a1e; border-radius: 26px; padding: 14px 18px; font-size: 21px; margin-bottom: 14px; box-shadow: 0 5px 0 #3b2a1e; }
 .bubble::before { content: ''; position: absolute; left: -22px; top: 34px; border: 12px solid transparent; border-right: 18px solid #3b2a1e; }
@@ -94,24 +94,38 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; }
 .ctrls button:disabled { opacity: .45; }
 .quiet { margin: 12px 0 0; background: #fff1c9; border-radius: 14px; padding: 10px 14px; font-size: 19px; }
 
-.tasks { display: flex; flex-direction: column; gap: 14px; }
-.intro { background: var(--card); border-radius: 18px; padding: 14px 16px; border: 4px solid #3b2a1e; box-shadow: 0 5px 0 #3b2a1e; }
-.intro { display: flex; gap: 12px; align-items: center; }
-.intro img { width: 74px; flex: none; }
-.intro b { color: var(--gc); }
-.task { background: var(--card); border-radius: 18px; padding: 14px 16px; border: 4px solid #3b2a1e; box-shadow: 0 5px 0 #3b2a1e; }
-.task.star { background: #fff4cf; }
-.task .head { display: flex; gap: 12px; align-items: flex-start; }
-.task .num { flex: none; border: 3px solid #3b2a1e; width: 44px; height: 44px; border-radius: 50%; background: var(--gc); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 22px; }
-.task.star .num { background: #e8b80c; }
-.task .q { flex: 1; font-size: 22px; font-weight: 700; padding-top: 4px; }
-.task .q small { display: block; font-weight: 400; color: var(--muted); font-size: 18px; }
-.task .btns { display: flex; gap: 10px; margin-top: 10px; padding-left: 54px; }
-.task .btns button { border-radius: 12px; padding: 8px 14px; font-size: 18px; background: #efe6d6; }
-.task .btns button.on { background: var(--gc); color: #fff; }
-.tip { margin: 10px 0 0 54px; background: #eef4ff; border-left: 6px solid var(--accent); border-radius: 10px; padding: 10px 14px; font-size: 19px; }
-.tip .start { display: block; margin-top: 6px; font-style: italic; }
-.paper { text-align: center; color: var(--muted); font-size: 18px; }
+.box { background: var(--card); border-radius: 18px; padding: 14px 16px; border: 4px solid #3b2a1e; box-shadow: 0 5px 0 #3b2a1e; }
+.intro { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 18px; }
+.intro img { width: 92px; flex: none; transform: rotate(-3deg); filter: drop-shadow(0 4px 4px rgba(59,42,30,.25)); cursor: pointer; }
+.intro .bubble { flex: 1; margin: 0; font-size: 21px; }
+.intro .bubble::before { top: 26px; } .intro .bubble::after { top: 29px; }
+.intro ol { margin: 6px 0 0; padding-left: 26px; }
+.bhead { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.top > div:nth-child(2) { min-width: 0; }
+.intro li { margin: 2px 0; }
+.say { border-radius: 12px; padding: 8px 14px; font-size: 18px; background: #efe6d6; flex: none; }
+.say.on { background: var(--gc); color: #fff; }
+
+.side2 { display: flex; flex-direction: column; gap: 18px; }
+.box h2 { margin: 0 0 10px; font-size: 24px; font-family: Fredoka, Andika, sans-serif; font-weight: 600; }
+.words { display: flex; flex-wrap: wrap; gap: 10px; }
+.words button { border: 3px solid #3b2a1e; box-shadow: 0 3px 0 #3b2a1e; border-radius: 14px; padding: 8px 16px; font-size: 21px; font-weight: 700; background: #fff; }
+.words button.on { background: var(--gc); color: #fff; }
+.def { margin-top: 12px; background: #fff8e3; border-radius: 12px; padding: 12px 14px; display: flex; gap: 12px; align-items: flex-start; font-size: 20px; }
+.def p { margin: 0; flex: 1; }
+.tipbtn { width: 100%; text-align: left; display: flex; gap: 14px; align-items: center; background: #fff4cf; }
+.tipbtn .big { font-size: 40px; }
+.tipbtn b { font-size: 24px; display: block; font-family: Fredoka, Andika, sans-serif; font-weight: 600; }
+.tipbtn span span { color: var(--muted); font-size: 18px; }
+
+/* Tipps */
+.tips { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+.tips .head { display: flex; gap: 12px; align-items: center; }
+.tips .num { flex: none; border: 3px solid #3b2a1e; width: 48px; height: 48px; border-radius: 50%; background: #e8b80c; color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 24px; font-family: Fredoka, Andika, sans-serif; }
+.tips .head b { flex: 1; font-size: 23px; }
+.tips .open { margin-top: 12px; width: 100%; border: 3px solid #3b2a1e; box-shadow: 0 3px 0 #3b2a1e; border-radius: 14px; padding: 12px; font-size: 21px; font-weight: 700; background: #fff4cf; }
+.tips .text { margin: 12px 0 0; font-size: 22px; background: #fff8e3; border-radius: 12px; padding: 12px 14px; }
+.tips .home { align-self: center; border: 4px solid #3b2a1e; box-shadow: 0 4px 0 #3b2a1e; border-radius: 16px; padding: 14px 22px; font-size: 22px; font-weight: 700; background: var(--gc); color: #fff; }
 
 /* Sperre */
 .lock { max-width: 460px; margin: 12vh auto 0; background: var(--card); border-radius: 22px; padding: 28px; border: 3px solid var(--line); text-align: center; }
@@ -126,7 +140,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; }
 <body>
 
 <div id="lock" class="lock" hidden>
-  <img src="eddie.svg" alt="" style="width:120px">
+  <img src="eddie.webp" alt="" style="width:120px">
   <h1>Werbedetektive</h1>
   <p>Für Lehrkräfte: Bitte Passwort eingeben.<br>Das iPad merkt es sich danach.</p>
   <form id="lockForm" autocomplete="off">
@@ -138,9 +152,9 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; }
 
 <div id="home" class="wrap" hidden>
   <header class="hero">
-    <img class="eddie" id="eddie" src="eddie.svg" alt="Eddie, das Erdmännchen, im Forscherkittel mit Lupe">
+    <img class="eddie" id="eddie" src="eddie.webp" alt="Eddie, das Erdmännchen, im Forscherkittel mit Lupe">
     <div class="side">
-      <div class="bubble"><b>Hallo, ihr Werbedetektive! Ich bin Eddie.</b><br>Heute finden wir heraus, ob Werbung die Wahrheit sagt. Tippt auf eure Gruppe!</div>
+      <div class="bubble" id="homeBubble"></div>
       <span class="badge">🔍 WERBEDETEKTIVE</span>
       <h1>Können wir Werbung immer glauben?</h1>
     </div>
@@ -159,7 +173,12 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; }
     <button class="back" id="back" aria-label="Zur Übersicht, gedrückt halten"><span class="fill"></span><span style="position:relative">⬅ Übersicht<br><small>gedrückt halten</small></span></button>
   </div>
 
-  <div class="grid">
+  <div class="intro" id="intro">
+    <img src="eddie.webp" alt="Eddie" id="introEddie">
+    <div class="bubble"><div class="bhead"><b>Eddie sagt:</b><button class="say" id="introSay">🔊 Vorlesen</button></div><ol id="introList"></ol></div>
+  </div>
+
+  <div class="grid" id="main">
     <section class="player">
       <div class="screen">
         <video id="vid" playsinline webkit-playsinline preload="auto" controls controlslist="nodownload noplaybackrate noremoteplayback" disablepictureinpicture disableremoteplayback></video>
@@ -172,51 +191,55 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; }
       <p class="quiet">🤫 Sprecht leise. Ihr dürft den Spot so oft anschauen, wie ihr wollt.</p>
     </section>
 
-    <section class="tasks" id="tasks"></section>
+    <section class="side2">
+      <div class="box">
+        <h2>📖 Was bedeutet …?</h2>
+        <div class="words" id="words"></div>
+        <div class="def" id="def" hidden><p id="defText"></p><button class="say" id="defSay">🔊 Vorlesen</button></div>
+      </div>
+      <button class="box tipbtn" id="tipOpen"><span class="big">💡</span><span><b>Ihr kommt nicht weiter?</b><span>Hier tippen, dann bekommt ihr einen Tipp.</span></span></button>
+    </section>
   </div>
+
+  <section class="tips" id="tipView" hidden></section>
 </div>
 
 <script>
 'use strict';
-const GROUPS = [
-  { sym: '●', tips: [
-      'Schaut auf das Ende vom Spot. Dort seht ihr die Box und das Logo.',
-      'Schaut auf die Kinder und den Papa. Wie fühlen sie sich, als die Box aufgeht?',
-      'Was passiert mit der Box und im Auto? Kann das wirklich passieren?',
-      'Was ist wirklich in der Box drin?'] },
-  { sym: '▲', tips: [
-      'Schaut auf die Flaschen am Ende vom Spot. Lest das rote Schild.',
-      'Was kann man gewinnen, wenn man Müllermilch kauft?',
-      'Wie schnell findet die Frau die Gewinner-Flasche? Geht das im Supermarkt so leicht?',
-      'Wie viele Flaschen muhen wirklich? Hört auf den Satz am Ende.'] },
-  { sym: '■', tips: [
-      'Schaut auf die Flaschen am Ende vom Spot. Hört auf den letzten Satz.',
-      'Was sagt die Werbung über den Saft? Was soll er für euch tun?',
-      'Schaut auf die Kuscheltiere und Puppen. Was machen sie? Können sie das wirklich?',
-      'Was ist wirklich im Saft drin? Hört genau hin.'] },
-  { sym: '★', tips: [
-      'Schaut auf die Tüte am Ende vom Spot.',
-      'Lest die Wörter am Ende. Was sollen die Bonbons sein?',
-      'Schaut auf die Gesichter der Kinder. Was passiert mit ihren Wangen?',
-      'Was steht auf der Tüte? Was ist in den Bonbons drin?'] },
-  { sym: '♥', tips: [
-      'Schaut auf die Schuhe am Ende vom Spot.',
-      'Was können die Schuhe laut Werbung? Was schafft der Mann mit den Schuhen?',
-      'Wer ist schneller, der Mann oder der Gepard? Kann ein Mensch so schnell laufen?',
-      'Wofür sind Laufschuhe wirklich gut?'] },
-  { sym: '◆', tips: [
-      'Schaut auf die Packungen ganz am Ende vom Spot. Lest den Satz unten.',
-      'Was soll der Kaugummi mit euren Zähnen machen?',
-      'Was macht der Junge mit dem Teller? Könntest du das?',
-      'Was kann Kaugummikauen für die Zähne wirklich tun?'] },
-];
-const QUESTIONS = [
-  { q: 'Was wird verkauft?', sub: 'Wie heißt die Marke? Gibt es einen Slogan?', start: 'Verkauft wird … Die Marke heißt … Der Slogan ist …' },
-  { q: 'Was verspricht die Werbung?', sub: 'Was soll das Produkt für dich tun?', start: 'Die Werbung verspricht, dass …' },
-  { q: 'Was ist übertrieben oder erfunden?', sub: 'Was kann es in echt nicht geben?', start: 'Erfunden ist, dass …' },
-  { q: 'Was ist echt?', sub: 'Was stimmt wirklich?', start: 'Echt ist, dass …' },
-];
-const STAR = { q: 'Expertenaufgabe: Glaubt ihr der Werbung?', sub: 'Warum? Warum nicht? Würdet ihr das kaufen?', tip: 'Denkt an die Super-Limo!', start: 'Wir glauben der Werbung (nicht), weil …' };
+// Alle Texte an einer Stelle. tools/stimme.py und tools/druck.py lesen diesen Block mit.
+const TEXT = /*TEXT*/{
+  "home": ["Hallo, ihr Werbedetektive! Ich bin Eddie.", "Heute finden wir heraus, ob Werbung immer die Wahrheit sagt.", "Tippt auf eure Gruppe!"],
+  "intro": ["Schaut euch die Werbung an.", "Beantwortet die Fragen auf dem Arbeitsblatt und schreibt eure Antworten auf.", "Wenn ihr fertig seid, bearbeitet die Raketenaufgabe auf der Rückseite."],
+  "words": [
+    { "w": "Marke", "d": "Eine Marke ist der Name, den eine Firma ihren Sachen gibt. Zum Beispiel LEGO oder Haribo." },
+    { "w": "Produkt", "d": "Ein Produkt ist eine Sache, die man kaufen kann. Zum Beispiel ein Ball, ein Buch oder ein Eis." },
+    { "w": "Slogan", "d": "Ein Slogan ist ein kurzer Satz aus der Werbung. Man soll ihn sich gut merken. Zum Beispiel „Haribo macht Kinder froh“." },
+    { "w": "Versprechen", "d": "Die Werbung verspricht dir, was das Produkt für dich tun soll. Zum Beispiel, dass du mit einem Ball spielst wie ein Profi." },
+    { "w": "Übertreiben", "d": "Übertreiben heißt, etwas viel größer, schneller oder besser zu zeigen, als es in echt ist. Zum Beispiel eine Limo, mit der man fliegen kann." }
+  ],
+  "tipHeads": ["Was verspricht die Werbung?", "Was ist echt und was ist übertrieben?"],
+  "groups": [
+    { "sym": "●", "tips": [
+      "Schaut auf die Kinder, als die Box aufgeht. Wie fühlen sie sich? Was soll das Happy Meal euch schenken?",
+      "Kann sich eine Box in echt in einen Dschungel verwandeln? Und was ist wirklich in der Box drin?"] },
+    { "sym": "▲", "tips": [
+      "Was kann man gewinnen, wenn man die richtige Flasche findet? Wie leicht sieht das in der Werbung aus?",
+      "Die Frau findet die Gewinnerflasche sofort. Wäre das im Supermarkt auch so leicht? Hört genau auf den Satz am Ende. Wie viele Flaschen muhen wirklich?"] },
+    { "sym": "■", "tips": [
+      "Was passiert in der Werbung, als der Saft ins Spiel kommt? Was soll der Saft für euch tun? Hört auch auf den letzten Satz.",
+      "Ist es realistisch, dass Kuscheltiere und Puppen zum Leben erwachen? Was ist wirklich in einem Orangensaft drin?"] },
+    { "sym": "★", "tips": [
+      "Lest die Wörter am Ende vom Spot. Was soll an den Bonbons gut für euch sein?",
+      "Können Wangen in echt so aufploppen? Schaut auf die Tüte. Was ist wirklich in den Bonbons drin?"] },
+    { "sym": "♥", "tips": [
+      "Was schafft der Mann mit den Schuhen? Was sollen die Schuhe also für euch tun?",
+      "Kann ein Mensch schneller laufen als ein Gepard, nur wegen seiner Schuhe? Wofür sind Laufschuhe in echt gut?"] },
+    { "sym": "◆", "tips": [
+      "Was soll der Kaugummi mit euren Zähnen machen? Lest den Satz unten am Ende vom Spot.",
+      "Könntet ihr in echt in einen Teller beißen? Was kann Kaugummikauen für die Zähne wirklich tun?"] }
+  ]
+}/*TEXT*/;
+const GROUPS = TEXT.groups;
 const PW_KEY = 'wd-pw';
 
 const $ = (id) => document.getElementById(id);
@@ -262,56 +285,98 @@ function renderHome() {
   show('home');
 }
 
-function say(text, btn) {
-  if (!('speechSynthesis' in window)) return;
-  const s = window.speechSynthesis;
-  const wasOn = btn.classList.contains('on');
-  s.cancel();
-  document.querySelectorAll('.btns .say.on').forEach((x) => x.classList.remove('on'));
-  if (wasOn) return;
-  const u = new SpeechSynthesisUtterance(text.replace(/…/g, ''));
-  u.lang = 'de-DE';
-  u.rate = 0.85;
-  const v = s.getVoices().find((x) => x.lang && x.lang.toLowerCase().startsWith('de'));
-  if (v) u.voice = v;
-  u.onend = u.onerror = () => btn.classList.remove('on');
+// Vorlesen: aufgenommene Stimme aus audio/, nur falls die fehlt, die Stimme des iPads
+const player = new Audio();
+let sayBtn = null;
+function stopSay() {
+  player.pause();
+  window.speechSynthesis && speechSynthesis.cancel();
+  if (sayBtn) sayBtn.classList.remove('on');
+  sayBtn = null;
+}
+function say(id, text, btn) {
+  const wasOn = btn && btn === sayBtn;
+  stopSay();
+  if (wasOn || !btn) return;
+  sayBtn = btn;
   btn.classList.add('on');
-  s.speak(u);
+  const done = () => { if (sayBtn === btn) { btn.classList.remove('on'); sayBtn = null; } };
+  player.onended = done;
+  let fell = false;
+  const fallback = () => { if (!fell && sayBtn === btn) { fell = true; robot(text, btn, done); } };
+  player.onerror = fallback;
+  player.src = `audio/${id}.mp3`;
+  player.play().catch(fallback);
+}
+function robot(text, btn, done) {
+  if (!('speechSynthesis' in window)) return done();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'de-DE';
+  u.rate = 0.9;
+  const vs = speechSynthesis.getVoices().filter((x) => x.lang && x.lang.toLowerCase().startsWith('de'));
+  const v = vs.find((x) => /premium|enhanced|erweitert/i.test(x.name)) || vs[0];
+  if (v) u.voice = v;
+  u.onend = u.onerror = done;
+  speechSynthesis.speak(u);
 }
 
-function taskCard(n, q, tip, start, star) {
-  const el = document.createElement('article');
-  el.className = 'task' + (star ? ' star' : '');
-  el.innerHTML = `
-    <div class="head"><span class="num">${star ? '⭐' : n}</span><div class="q">${q.q}<small>${q.sub}</small></div></div>
-    <div class="btns"><button class="say">🔊 Vorlesen</button><button class="hint">💡 Tipp</button></div>
-    <div class="tip" hidden>${tip}<span class="start">${start}</span></div>`;
-  const tipEl = el.querySelector('.tip');
-  el.querySelector('.say').onclick = (e) => say(tipEl.hidden ? `${q.q} ${q.sub}` : `${q.q} ${q.sub} Tipp. ${tip} ${start}`, e.currentTarget);
-  el.querySelector('.hint').onclick = (e) => {
-    tipEl.hidden = !tipEl.hidden;
-    e.currentTarget.classList.toggle('on', !tipEl.hidden);
-  };
-  return el;
+function renderWords() {
+  const box = $('words');
+  box.innerHTML = '';
+  TEXT.words.forEach((w, k) => {
+    const b = document.createElement('button');
+    b.textContent = w.w;
+    b.onclick = () => {
+      const open = b.classList.contains('on');
+      box.querySelectorAll('button').forEach((x) => x.classList.remove('on'));
+      stopSay();
+      $('def').hidden = open;
+      if (open) return;
+      b.classList.add('on');
+      $('defText').innerHTML = `<b>${w.w}</b><br>${w.d}`;
+      $('defSay').onclick = (e) => say(`w${k + 1}`, `${w.w}. ${w.d}`, e.currentTarget);
+    };
+    box.appendChild(b);
+  });
+  $('def').hidden = true;
 }
 
-async function renderGroup(i) {
+function renderTips(i) {
   const g = GROUPS[i];
+  const v = $('tipView');
+  v.innerHTML = '';
+  g.tips.forEach((t, k) => {
+    const el = document.createElement('article');
+    el.className = 'box';
+    el.innerHTML = `<div class="head"><span class="num">${k + 1}</span><b>Tipp ${k + 1}: ${TEXT.tipHeads[k]}</b><button class="say">🔊 Vorlesen</button></div>
+      <button class="open">💡 Tipp ${k + 1} aufdecken</button><p class="text" hidden>${t}</p>`;
+    const text = el.querySelector('.text');
+    el.querySelector('.open').onclick = (e) => { e.currentTarget.hidden = true; text.hidden = false; };
+    el.querySelector('.say').onclick = (e) => { el.querySelector('.open').hidden = true; text.hidden = false; say(`g${i + 1}t${k + 1}`, `Tipp ${k + 1}. ${TEXT.tipHeads[k]} ${t}`, e.currentTarget); };
+    v.appendChild(el);
+  });
+  const back = document.createElement('button');
+  back.className = 'home';
+  back.textContent = '⬅ Zurück zum Video';
+  back.onclick = () => { location.hash = `gruppe-${i + 1}`; };
+  v.appendChild(back);
+}
+
+let shown = -1; // Gruppe, deren Video gerade geladen ist
+async function renderGroup(i, tips) {
+  const g = GROUPS[i];
+  stopSay();
   document.body.style.setProperty('--gc', `var(--g${i + 1})`);
   $('gSym').textContent = g.sym;
-  $('gName').textContent = `Gruppe ${i + 1}`;
-
-  const tasks = $('tasks');
-  tasks.innerHTML = `<div class="intro"><img src="eddie.svg" alt=""><div><b>Eddie sagt:</b> Schaut euch den Spot an. Sprecht über die Fragen. Schreibt eure Antworten auf den <b>Detektiv-Bogen</b>.</div></div>`;
-  QUESTIONS.forEach((q, k) => tasks.appendChild(taskCard(k + 1, q, g.tips[k], q.start)));
-  tasks.appendChild(taskCard(0, STAR, STAR.tip, STAR.start, true));
-  const p = document.createElement('p');
-  p.className = 'paper';
-  p.textContent = 'Fertig? Übt, wer was bei der Präsentation sagt.';
-  tasks.appendChild(p);
+  $('gName').textContent = tips ? `Gruppe ${i + 1} · Tipps` : `Gruppe ${i + 1}`;
+  $('intro').hidden = $('main').hidden = tips;
+  $('tipView').hidden = !tips;
+  if (tips) { vid.pause(); renderTips(i); }
+  else renderWords();
   show('group');
+  if (shown === i) return;
+  shown = i;
 
-  const vid = $('vid');
   vid.pause();
   vid.removeAttribute('src');
   vid.load();
@@ -323,7 +388,7 @@ async function renderGroup(i) {
     const res = await fetch(`videos/g${i + 1}.bin`);
     if (!res.ok) throw new Error(res.status);
     const plain = await open(key, new Uint8Array(await res.arrayBuffer()));
-    if (location.hash !== `#gruppe-${i + 1}`) return;
+    if (shown !== i) return;
     videoUrl = URL.createObjectURL(new Blob([plain], { type: 'video/mp4' }));
     vid.src = videoUrl;
     vid.load();
@@ -331,13 +396,14 @@ async function renderGroup(i) {
     $('play').disabled = $('again').disabled = false;
   } catch (e) {
     $('vMsg').textContent = 'Das Video lädt nicht. Bitte der Lehrerin Bescheid sagen.';
+    shown = -1;
   }
 }
 
 function route() {
   if (!key) return;
-  const m = location.hash.match(/^#gruppe-([1-6])$/);
-  if (m) renderGroup(+m[1] - 1); else renderHome();
+  const m = location.hash.match(/^#gruppe-([1-6])(\/tipp)?$/);
+  if (m) renderGroup(+m[1] - 1, !!m[2]); else { stopSay(); renderHome(); }
 }
 
 // Video-Knöpfe
@@ -358,7 +424,7 @@ const startHold = (e) => {
   holdTimer = setTimeout(() => {
     back.classList.remove('holding');
     vid.pause();
-    window.speechSynthesis && speechSynthesis.cancel();
+    stopSay();
     location.hash = '';
   }, 1500);
 };
@@ -375,7 +441,12 @@ $('lockForm').onsubmit = async (e) => {
 };
 
 window.addEventListener('hashchange', route);
-$('eddie').onclick = (e) => say('Hallo, ihr Werbedetektive! Ich bin Eddie. Heute finden wir heraus, ob Werbung die Wahrheit sagt. Tippt auf eure Gruppe!', e.currentTarget);
+$('homeBubble').innerHTML = `<b>${TEXT.home[0]}</b><br>${TEXT.home.slice(1).join(' ')}`;
+$('introList').innerHTML = TEXT.intro.map((t) => `<li>${t}</li>`).join('');
+$('eddie').onclick = (e) => say('home', TEXT.home.join(' '), e.currentTarget);
+$('introSay').onclick = (e) => say('intro', TEXT.intro.join(' '), e.currentTarget);
+$('introEddie').onclick = () => $('introSay').click();
+$('tipOpen').onclick = () => { location.hash = `${location.hash.replace(/\/tipp$/, '')}/tipp`; };
 
 (async function start() {
   // Link mit #k=PASSWORT entsperrt direkt und entfernt das Passwort aus der Adresszeile
