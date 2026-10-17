@@ -1,5 +1,5 @@
 // Legt Seite, Schrift und verschlüsselte Spots beim ersten Öffnen ab, damit alles auch ohne WLAN läuft
-const CACHE = 'wd-v2';
+const CACHE = 'wd-v3';
 const FILES = [
   './', 'index.html', 'eddie.svg', 'fonts/andika-400.woff2', 'fonts/andika-700.woff2', 'fonts/fredoka-600.woff2', 'videos/meta.json',
   'videos/g1.bin', 'videos/g2.bin', 'videos/g3.bin', 'videos/g4.bin', 'videos/g5.bin', 'videos/g6.bin',

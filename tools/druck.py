@@ -12,10 +12,10 @@ G = [  # Farbe, Symbol, Spot, Tipps (wie auf der Seite)
         "Was passiert mit der Box und im Auto? Kann das wirklich passieren?",
         "Was ist wirklich in der Box drin?"]),
     ("#f08a1c", "▲", "Müllermilch", [
-        "Schaut auf die Flaschen am Ende vom Spot.",
-        "Was passiert, wenn der Mann die richtige Flasche findet? Was will er haben?",
-        "Hört genau hin! Welches Geräusch macht die Flasche? Kann eine Flasche das?",
-        "Was ist wirklich in der Flasche drin?"]),
+        "Schaut auf die Flaschen am Ende vom Spot. Lest das rote Schild.",
+        "Was kann man gewinnen, wenn man Müllermilch kauft?",
+        "Wie schnell findet die Frau die Gewinner-Flasche? Geht das im Supermarkt so leicht?",
+        "Wie viele Flaschen muhen wirklich? Hört auf den Satz am Ende."]),
     ("#b88600", "■", "hohes C", [
         "Schaut auf die Flaschen am Ende vom Spot. Hört auf den letzten Satz.",
         "Was sagt die Werbung über den Saft? Was soll er für euch tun?",
@@ -45,7 +45,7 @@ Q = [
 ]
 EH = [  # Erwartungshorizont der LiV
     ("Das Happy Meal macht Kinder glücklich und bringt Abenteuer und Magie.", "Die Box verwandelt sich in einen Dschungel, ein Regenbogen springt heraus.", "Im Happy Meal ist tatsächlich eine Spielfigur (Schleich).", "Fantasiewelt, Spielzeug bekannter Marken, Kinder als Darsteller, Jingle"),
-    ("Die Milch ist so frisch, dass man die Kuh noch hört.", "Die Flasche muht.", "Müllermilch ist ein Milchgetränk.", "Humor, Tiergeräusch als Symbol für Frische, einprägsamer Slogan"),
+    ("Wer Müllermilch kauft, kann ganz leicht 50.000 Euro gewinnen.", "Die Verkäuferin findet die Gewinnerflasche sofort und jubelt. Der Gewinn wirkt kinderleicht.", "In fünf Flaschen steckt wirklich ein „Muuh“. Wer eine davon findet, gewinnt 50.000 Euro. Müllermilch ist ein Milchgetränk.", "Gewinnspiel, Humor, Tiergeräusch („Muuh“) als Erkennungszeichen, Slogan „Alles Müller, oder was?“"),
     ("Der Saft gibt so viel Energie, dass sogar Spielzeug lebendig wird.", "Die Spielfiguren erwachen zum Leben.", "Orangensaft enthält Vitamin C.", "Gesundheitsversprechen im Slogan („Hauptsache gesund“), Kind als Darstellerin, Fantasie"),
     ("Naschen ist gesund und macht Spaß.", "Die Wangen ploppen übertrieben auf.", "Die Bonbons enthalten zugesetzte Vitamine.", "Lautmalerei („Plopp“), Humor, Gesundheitsargument („Vitamine“)"),
     ("Mit den Schuhen läuft man so schnell wie ein Gepard.", "Ein Mensch läuft durch Schuhe tierisch schnell.", "Laufschuhe können bequem sein und beim Laufen unterstützen.", "Tiere als Symbol für Eigenschaften (Schnelligkeit), Dynamik"),
