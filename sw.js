@@ -1,5 +1,5 @@
 // Legt Seite, Schrift und verschlüsselte Spots beim ersten Öffnen ab, damit alles auch ohne WLAN läuft
-const CACHE = 'wd-v5';
+const CACHE = 'wd-v6';
 const FILES = [
   './', 'index.html', 'eddie.webp', 'fonts/andika-400.woff2', 'fonts/andika-700.woff2', 'fonts/fredoka-600.woff2', 'videos/meta.json',
   'audio/g1t1.mp3', 'audio/g1t2.mp3', 'audio/g2t1.mp3', 'audio/g2t2.mp3', 'audio/g3t1.mp3', 'audio/g3t2.mp3', 'audio/g4t1.mp3', 'audio/g4t2.mp3', 'audio/g5t1.mp3', 'audio/g5t2.mp3', 'audio/g6t1.mp3', 'audio/g6t2.mp3', 'audio/home.mp3', 'audio/intro.mp3', 'audio/w1.mp3', 'audio/w2.mp3', 'audio/w3.mp3', 'audio/w4.mp3', 'audio/w5.mp3',
@@ -7,7 +7,7 @@ const FILES = [
 ];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES.map((f) => new Request(f, { cache: 'reload' })))  // am Browser-Zwischenspeicher vorbei, sonst landen alte Dateien im neuen Cache).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (e) => {
