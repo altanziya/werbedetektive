@@ -55,6 +55,7 @@ EH = [  # Erwartungshorizont der LiV
 BASE = """<!doctype html><html lang="de"><head><meta charset="utf-8"><title>{title}</title><style>
 @font-face {{ font-family: Andika; src: url(andika-400.woff2); font-weight: 400; }}
 @font-face {{ font-family: Andika; src: url(andika-700.woff2); font-weight: 700; }}
+@font-face {{ font-family: Fredoka; src: url(fredoka-600.woff2); font-weight: 600; }}
 @page {{ size: A4 {orient}; margin: 12mm; }}
 * {{ box-sizing: border-box; }}
 body {{ margin: 0; font-family: Andika, sans-serif; color: #23201c; font-size: 15pt; line-height: 1.35; }}
@@ -75,16 +76,18 @@ def bogen(with_starts):
     star_line = '<div class="line">Wir glauben der Werbung (nicht), weil …</div>' if with_starts else '<div class="line"></div>'
     rows += f'<section class="q star"><div class="h"><span class="n">⭐</span><div><b>Expertenaufgabe: Glaubt ihr der Werbung?</b><br><small>Warum? Warum nicht? Würdet ihr das kaufen?</small></div></div>{star_line}<div class="line"></div></section>'
     syms = "".join(f'<span class="box sym" style="color:{c}">{s}</span>' for c, s, *_ in G)
-    return f"""<div class="page"><header><div><div class="badge">🔍 DETEKTIV-BOGEN</div><h1>Können wir Werbung immer glauben?</h1></div>
+    return f"""<div class="page"><header><img class="ed" src="eddie.svg" alt=""><div class="tt"><div class="badge">🔍 DETEKTIV-BOGEN</div><h1>Können wir Werbung immer glauben?</h1></div>
 <div class="who">Gruppe: ______<br><span class="pick">Kreist euer Zeichen ein: {syms}</span></div></header>
 <p class="names">Unsere Namen: ________________________________________________</p>{rows}</div>"""
 
 
 bogen_css = """
-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid #23201c; padding-bottom: 6px; }
+header { display: flex; gap: 10px; align-items: flex-end; border-bottom: 3px solid #23201c; padding-bottom: 6px; }
 .badge { display: inline-block; background: #23201c; color: #fff; border-radius: 99px; padding: 1px 12px; font-size: 11pt; }
 h1 { margin: 4px 0 0; font-size: 22pt; }
-.who { text-align: right; font-size: 14pt; }
+.who { margin-left: auto; text-align: right; font-size: 14pt; }
+.ed { height: 30mm; }
+h1, .nm, .lead, .w b, .top { font-family: Fredoka, Andika, sans-serif; font-weight: 600; }
 .pick { font-size: 11pt; }
 .box { font-size: 16pt; margin-left: 4px; }
 .names { margin: 8px 0 4px; }
@@ -104,7 +107,7 @@ def schilder():
         cards = ""
         for j in (i, i + 1):
             c, s, *_ = G[j]
-            cards += f'<div class="card" style="border-color:{c}"><div class="sym big" style="background:{c}">{s}</div><div class="nm">Gruppe {j + 1}</div></div>'
+            cards += f'<div class="card" style="border-color:{c}"><img class="ed2" src="eddie.svg" alt=""><div class="sym big" style="background:{c}">{s}</div><div class="nm">Gruppe {j + 1}</div></div>'
         pages += f'<div class="page">{cards}</div>'
     return pages
 
@@ -112,8 +115,10 @@ def schilder():
 schild_css = """
 .page { display: flex; flex-direction: column; gap: 10mm; height: 272mm; }
 .card { flex: 1; border: 6mm solid; border-radius: 10mm; display: flex; align-items: center; justify-content: center; gap: 14mm; }
-.big { width: 70mm; height: 70mm; border-radius: 50%; color: #fff; display: grid; place-items: center; font-size: 110pt; }
-.nm { font-size: 64pt; font-weight: 700; }
+.big { width: 62mm; height: 62mm; flex: none; border-radius: 50%; color: #fff; display: grid; place-items: center; font-size: 110pt; }
+.nm { font-size: 58pt; white-space: nowrap; }
+.card { position: relative; }
+.ed2 { position: absolute; right: 6mm; bottom: 4mm; height: 42mm; }
 """
 
 
