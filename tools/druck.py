@@ -17,7 +17,7 @@ Q = [
     ("Was ist echt?", "Was stimmt wirklich?", ["Echt ist, dass …"]),
 ]
 EH = [  # Erwartungshorizont der LiV
-    ("Das Happy Meal macht Kinder glücklich und bringt Abenteuer und Magie.", "Die Box verwandelt sich in einen Dschungel, ein Regenbogen springt heraus.", "Im Happy Meal ist tatsächlich eine Spielfigur (Schleich).", "Fantasiewelt, Spielzeug bekannter Marken, Kinder als Darsteller, Jingle"),
+    ("Das Happy Meal macht Kinder glücklich und bringt Abenteuer und Magie.", "Das Happy Meal verwandelt sich in einen Dschungel, ein Regenbogen springt heraus.", "Im Happy Meal ist tatsächlich eine Spielfigur (Schleich).", "Fantasiewelt, Spielzeug bekannter Marken, Kinder als Darsteller, Jingle"),
     ("Wer Müllermilch kauft, kann ganz leicht 50.000 Euro gewinnen.", "Die Verkäuferin findet die Gewinnerflasche sofort und jubelt. Der Gewinn wirkt kinderleicht.", "In fünf Flaschen steckt wirklich ein „Muuh“. Wer eine davon findet, gewinnt 50.000 Euro. Müllermilch ist ein Milchgetränk.", "Gewinnspiel, Humor, Tiergeräusch („Muuh“) als Erkennungszeichen, Slogan „Alles Müller, oder was?“"),
     ("Der Saft gibt so viel Energie, dass sogar Spielzeug lebendig wird.", "Die Spielfiguren erwachen zum Leben.", "Orangensaft enthält Vitamin C.", "Gesundheitsversprechen im Slogan („Hauptsache gesund“), Kind als Darstellerin, Fantasie"),
     ("Naschen ist gesund und macht Spaß.", "Die Wangen ploppen übertrieben auf.", "Die Bonbons enthalten zugesetzte Vitamine.", "Lautmalerei („Plopp“), Humor, Gesundheitsargument („Vitamine“)"),
@@ -170,7 +170,7 @@ th { background: #f3ecdf; }
 """
 
 
-TB = [("Glück und Abenteuer", "Box wird zum Dschungel", "Spielfigur ist drin"),
+TB = [("Glück und Abenteuer", "Happy Meal wird zum Dschungel", "Spielfigur ist drin"),
       ("50.000 Euro gewinnen ist leicht", "Gewinnerflasche sofort gefunden", "5 Flaschen muhen wirklich"),
       ("Saft macht stark und gesund", "Kuscheltiere werden lebendig", "Vitamin C ist drin"),
       ("Naschen ist gesund", "Wangen ploppen auf", "Vitamine sind zugesetzt"),
@@ -226,9 +226,9 @@ DOCS = [
     ("Tafelbild", "landscape", tb_css, tafelbild()),
     ("Lernumgebung_Screenshots", "portrait", lu_css, lernumgebung()),
 ]
-LABEL = {"Detektivbogen_mit_Satzanfaengen": "Anhang 2: Detektivbogen mit Satzanfängen", "Detektivbogen_ohne_Satzanfaenge": "Anhang 3: Detektivbogen ohne Satzanfänge",
-         "Lernumgebung_Screenshots": "Anhang 4", "Tippkarten_Reserve": "Anhang 5: Tippkarten (Auszug, Gruppen 1 und 2)", "Erwartungshorizont": "Anhang 6",
-         "Tafelbild": "Anhang 7: Tafelbild (geplanter Endzustand)", "Leitfrage_und_Wortspeicher": "Anhang 8: Leitfrage und Wortspeicher"}
+LABEL = {"Detektivbogen_mit_Satzanfaengen": "Anhang 3: Detektivbogen mit Satzanfängen", "Detektivbogen_ohne_Satzanfaenge": "Anhang 4: Detektivbogen ohne Satzanfänge",
+         "Lernumgebung_Screenshots": "Anhang 5", "Tippkarten_Reserve": "Anhang 6: Tippkarten (Auszug, Gruppen 1 und 2)", "Erwartungshorizont": "Anhang 7",
+         "Tafelbild": "Anhang 8: Tafelbild (geplanter Endzustand)", "Leitfrage_und_Wortspeicher": "Anhang 9: Leitfrage und Wortspeicher"}
 ANH = os.environ.get("ANHANG") == "1"
 if ANH:
     DOCS = [d for d in DOCS if d[0] in LABEL]
