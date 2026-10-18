@@ -8,17 +8,19 @@ CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 TEXT = json.loads(re.search(r"/\*TEXT\*/(.*?)/\*TEXT\*/", (ROOT / "index.html").read_text(), re.S).group(1))
 COLORS = ["#e5483b", "#f08a1c", "#b88600", "#3a9a4b", "#2f6fdf", "#8a4fd1"]
-SPOTS = ["McDonald's Happy Meal", "Müllermilch", "hohes C", "nimm2 soft", "Skechers GOrun 2", "Wrigley's Extra"]
-G = [(c, g["sym"], s, g["tips"]) for c, g, s in zip(COLORS, TEXT["groups"], SPOTS)]  # Farbe, Symbol, Spot, Tipp 1 und 2 (wie auf der Seite)
+SPOTS = ["McDonald's Happy Meal", "Müllermilch Schoko", "hohes C", "nimm2 soft", "Skechers GOrun 2", "Wrigley's Extra"]
+G = [(c, g["sym"], s, g["tips"]) for c, g, s in zip(COLORS, TEXT["groups"], SPOTS)]  # Farbe, Symbol, Spot, Tipps 1 bis 4 (wie auf der Seite)
+# Aufgaben nach Anforderungsbereichen: Titel wie die Tipp-Überschriften auf der Seite, Operator fett
 Q = [
-    ("Was wird verkauft?", "Wie heißt die Marke? Gibt es einen Slogan?", ["Verkauft wird …", "Die Marke heißt …", "Der Slogan ist …"]),
-    ("Was verspricht die Werbung?", "Was soll das Produkt für dich tun?", ["Die Werbung verspricht, dass …"]),
-    ("Was ist übertrieben oder erfunden?", "Was kann es in echt nicht geben?", ["Erfunden ist, dass …"]),
-    ("Was ist echt?", "Was stimmt wirklich?", ["Echt ist, dass …"]),
+    ("I", TEXT["tipHeads"][0], "Wer spielt mit? Was passiert? Welches Produkt wird gezeigt?", ["In der Werbung sieht man …", "Das Produkt heißt …"]),
+    ("I", TEXT["tipHeads"][1], "Was gibt es wirklich? Schaut auch auf das Produkt auf eurem Tisch.", ["Echt ist, dass …"]),
+    ("I", TEXT["tipHeads"][2], "Was kann es in echt nicht geben?", ["Erfunden ist, dass …"]),
+    ("II", TEXT["tipHeads"][3], "Was soll das Produkt für euch tun? Warum zeigt die Werbung etwas Erfundenes?", ["Die Werbung verspricht, dass …", "Sie zeigt etwas Erfundenes, damit …"]),
 ]
+op = lambda t: "<b>{}</b>,{}".format(*t.split(",", 1)) if "," in t.split()[0] else f"<b>{t}</b>"
 EH = [  # Erwartungshorizont der LiV
     ("Das Happy Meal macht Kinder glücklich und bringt Abenteuer und Magie.", "Das Happy Meal verwandelt sich in einen Dschungel, ein Regenbogen springt heraus.", "Im Happy Meal ist tatsächlich eine Spielfigur (Schleich).", "Fantasiewelt, Spielzeug bekannter Marken, Kinder als Darsteller, Jingle"),
-    ("Wer Müllermilch kauft, kann ganz leicht 50.000 Euro gewinnen.", "Die Verkäuferin findet die Gewinnerflasche sofort und jubelt. Der Gewinn wirkt kinderleicht.", "In fünf Flaschen steckt wirklich ein „Muuh“. Wer eine davon findet, gewinnt 50.000 Euro. Müllermilch ist ein Milchgetränk.", "Gewinnspiel, Humor, Tiergeräusch („Muuh“) als Erkennungszeichen, Slogan „Alles Müller, oder was?“"),
+    ("Müllermilch Schoko schmeckt so gut, dass niemand widerstehen kann. Sogar die Mama trinkt heimlich die letzte Flasche ihres Kindes.", "Schokostücke und Milch fliegen durch die Luft. Die Flasche wirkt riesig, die Szene im Kühlschrank ist gespielt.", "Müllermilch Schoko ist ein Milchgetränk mit Kakao und Zucker, das vielen Kindern schmeckt.", "Humor, Familienszene aus dem Alltag, Kamera aus dem Kühlschrank, Slogan „Alles Müller, oder was?“"),
     ("Der Saft gibt so viel Energie, dass sogar Spielzeug lebendig wird.", "Die Spielfiguren erwachen zum Leben.", "Orangensaft enthält Vitamin C.", "Gesundheitsversprechen im Slogan („Hauptsache gesund“), Kind als Darstellerin, Fantasie"),
     ("Naschen ist gesund und macht Spaß.", "Die Wangen ploppen übertrieben auf.", "Die Bonbons enthalten zugesetzte Vitamine.", "Lautmalerei („Plopp“), Humor, Gesundheitsargument („Vitamine“)"),
     ("Mit den Schuhen läuft man so schnell wie ein Gepard.", "Ein Mensch läuft durch Schuhe tierisch schnell.", "Laufschuhe können bequem sein und beim Laufen unterstützen.", "Tiere als Symbol für Eigenschaften (Schnelligkeit), Dynamik"),
@@ -41,23 +43,23 @@ body {{ margin: 0; font-family: Andika, sans-serif; color: #23201c; font-size: 1
 
 def bogen(with_starts):
     rows = ""
-    for i, (q, sub, starts) in enumerate(Q, 1):
+    for i, (afb, q, sub, starts) in enumerate(Q, 1):
         lines = "".join(f'<div class="line">{s if with_starts else ""}</div>' for s in (starts if with_starts else ["", ""]))
         if with_starts and len(starts) == 1:
             lines += '<div class="line"></div>'
-        rows += f'<section class="q"><div class="h"><span class="n">{i}</span><div><b>{q}</b><br><small>{sub}</small></div></div>{lines}</section>'
+        rows += f'<section class="q"><div class="h"><span class="n">{i}</span><div class="qt">{op(q)}<br><small>{sub}</small></div><span class="afb">AFB {afb}</span></div>{lines}</section>'
     syms = "".join(f'<span class="box sym" style="color:{c}">{s}</span>' for c, s, *_ in G)
-    help_ = '<p class="help">📖 Ihr kennt ein Wort nicht? Eddie erklärt es auf dem iPad. &nbsp; 💡 Ihr kommt nicht weiter? Tippt auf dem iPad auf den Tipp.</p>'
+    help_ = '<p class="help">📖 Ihr kennt ein Wort nicht? Eddie erklärt es auf dem iPad. &nbsp; 💡 Ihr kommt nicht weiter? Zu jeder Aufgabe gibt es auf dem iPad einen Tipp.</p>'
     front = f"""<div class="page"><header><img class="ed" src="{ROOT.as_uri()}/eddie.webp" alt=""><div class="tt"><div class="badge">🔍 DETEKTIV-BOGEN</div><h1>Können wir Werbung immer glauben?</h1></div>
 <div class="who">Gruppe: ______<br><span class="pick">Kreist euer Zeichen ein: {syms}</span></div></header>
 <p class="names">Unsere Namen: ________________________________________________</p>{rows}{help_}<p class="turn">Fertig? Dreht das Blatt um. 🚀</p></div>"""
     s = lambda t: t if with_starts else ""
     back = f"""<div class="page"><header class="rk"><span class="rocket">🚀</span><div class="tt"><div class="badge">RAKETENAUFGABE</div><h1>Glaubt ihr der Werbung?</h1></div></header>
-<section class="q star"><div class="h"><span class="n">A</span><div><b>Glaubt ihr dem Versprechen der Werbung?</b><br><small>Warum? Warum nicht? Denkt an die Super-Limo.</small></div></div>
-<div class="line">{s("Wir glauben der Werbung (nicht), weil …")}</div><div class="line"></div><div class="line"></div></section>
-<section class="q star"><div class="h"><span class="n">B</span><div><b>Würdet ihr das Produkt kaufen?</b><br><small>Erklärt, warum.</small></div></div>
+<section class="q star"><div class="h"><span class="n">A</span><div class="qt"><b>Beurteilt</b>, ob ihr dem Versprechen der Werbung glauben könnt.<br><small>Begründet eure Meinung. Denkt an die Super-Limo.</small></div><span class="afb">AFB III</span></div>
+<div class="line">{s("Wir glauben dem Versprechen (nicht), weil …")}</div><div class="line"></div><div class="line"></div></section>
+<section class="q star"><div class="h"><span class="n">B</span><div class="qt"><b>Nehmt Stellung.</b> Was bedeutet die Werbung für eure Kaufentscheidung?<br><small>Würdet ihr das Produkt kaufen? Warum oder warum nicht?</small></div><span class="afb">AFB III</span></div>
 <div class="line">{s("Wir würden es (nicht) kaufen, weil …")}</div><div class="line"></div></section>
-<section class="q star draw"><div class="h"><span class="n">⭐</span><div><b>Raketen-Plus: Wie sähe die Werbung aus, wenn sie nur die Wahrheit sagt?</b><br><small>Malt oder schreibt.</small></div></div><div class="canvas"></div></section></div>"""
+<section class="q star draw"><div class="h"><span class="n">⭐</span><div class="qt"><b>Raketen-Plus:</b> Wie sähe die Werbung aus, wenn sie nur die Wahrheit sagt?<br><small>Malt oder schreibt.</small></div><span class="afb">AFB III</span></div><div class="canvas"></div></section></div>"""
     return front + back
 
 
@@ -76,6 +78,8 @@ h1, .nm, .lead, .w b, .top { font-family: Fredoka, Andika, sans-serif; font-weig
 .h { display: flex; gap: 10px; align-items: flex-start; }
 .n { flex: none; width: 30px; height: 30px; border-radius: 50%; background: #23201c; color: #fff; display: grid; place-items: center; font-weight: 700; }
 .star .n { background: #e8b80c; }
+.qt { flex: 1; }
+.afb { flex: none; font-size: 9pt; color: #8a8273; border: 1px solid #c9bfae; border-radius: 99px; padding: 0 7px; margin-top: 4px; white-space: nowrap; }
 small { color: #6b645b; font-size: 12pt; }
 .line { border-bottom: 1.5px solid #9b917f; height: 40px; padding-top: 14px; color: #8a8273; font-style: italic; font-size: 13pt; }
 .help { margin: 8px 0 0; font-size: 11pt; color: #6b645b; }
@@ -114,7 +118,7 @@ def tippkarten():
         cards = ""
         for j in (i, i + 1):
             c, s, spot, tips = G[j]
-            items = "".join(f'<li><b>Tipp {k}: {TEXT["tipHeads"][k - 1]}</b><br>{t}</li>' for k, t in enumerate(tips, 1))
+            items = "".join(f'<li><b>Tipp zu Aufgabe {k}</b> <i>{TEXT["tipHeads"][k - 1]}</i><br>{t}</li>' for k, t in enumerate(tips, 1))
             cards += f'<div class="card" style="border-color:{c}"><div class="top"><span class="sym s" style="background:{c}">{s}</span> 💡 Tippkarte Gruppe {j + 1}<span class="spot">{spot}</span></div><ul>{items}</ul><div class="cut">Reservekarte, falls das iPad streikt</div></div>'
         pages += f'<div class="page">{cards}</div>'
     return pages
@@ -126,7 +130,7 @@ tipp_css = """
 .top { font-size: 20pt; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .s { width: 34px; height: 34px; border-radius: 50%; color: #fff; display: inline-grid; place-items: center; font-size: 18pt; }
 .spot { margin-left: auto; font-size: 10pt; font-weight: 400; color: #8a8273; }
-ul { list-style: none; padding: 0; margin: 6mm 0 0; display: flex; flex-direction: column; gap: 7mm; font-size: 16pt; }
+ul { list-style: none; padding: 0; margin: 4mm 0 0; display: flex; flex-direction: column; gap: 3.5mm; font-size: 13.5pt; line-height: 1.28; }
 i { color: #6b645b; }
 .cut { margin-top: auto; font-size: 9pt; color: #8a8273; text-align: right; }
 """
@@ -157,7 +161,7 @@ def erwartung():
         for i, (a, b, c, d) in enumerate(EH))
     return f"""<div class="page"><h1>Erwartungshorizont: Analyse der sechs Werbespots</h1>
 <table><thead><tr><th>Gruppe / Spot</th><th>Versprechen</th><th>Fiktiv (übertrieben/erfunden)</th><th>Wahrer Kern</th><th>Werbemittel</th></tr></thead><tbody>{rows}</tbody></table>
-<p class="src">Spots: McDonald's Deutschland „Nur im Happy Meal: exklusive bayala und Eldrador Tiere von Schleich“ (YouTube fn0-rO3ru0Q), Müllermilch „Finde das Muuh 2025“ (KoSvg-8NfIs), hohes C „Hauptsache gesund“ (wZbj80t1rYU), nimm2 soft „Die mit dem Plopp“ (hXE1qriS9Z4), Skechers GOrun 2 (0ufcuVFMtzo), Wrigley's Extra für Kinder (C5770f4hlNU). Zugriff 17.10.2026.</p></div>"""
+<p class="src">Spots: McDonald's Deutschland „Nur im Happy Meal: exklusive bayala und Eldrador Tiere von Schleich“ (YouTube fn0-rO3ru0Q), Müllermilch Schoko „Heimlich“ (FyfjR38BYAg), hohes C „Hauptsache gesund“ (wZbj80t1rYU), nimm2 soft „Die mit dem Plopp“ (hXE1qriS9Z4), Skechers GOrun 2 (0ufcuVFMtzo), Wrigley's Extra für Kinder (C5770f4hlNU). Zugriff 18.10.2026.</p></div>"""
 
 
 eh_css = """
@@ -171,7 +175,7 @@ th { background: #f3ecdf; }
 
 
 TB = [("Glück und Abenteuer", "Happy Meal wird zum Dschungel", "Spielfigur ist drin"),
-      ("50.000 Euro gewinnen ist leicht", "Gewinnerflasche sofort gefunden", "5 Flaschen muhen wirklich"),
+      ("So lecker, dass keiner widerstehen kann", "Schokostücke fliegen durch Milch", "Milchgetränk mit Kakao"),
       ("Saft macht stark und gesund", "Kuscheltiere werden lebendig", "Vitamin C ist drin"),
       ("Naschen ist gesund", "Wangen ploppen auf", "Vitamine sind zugesetzt"),
       ("Schnell wie ein Gepard", "Mann überholt Gepard", "Bequeme Laufschuhe"),
@@ -205,13 +209,13 @@ def lernumgebung():
     return """<div class="page"><h1>Lernumgebung „Werbedetektive“</h1>
 <figure><img src="shot_home.png"><figcaption>Startseite mit Klassentier Eddie und Gruppenauswahl</figcaption></figure>
 <figure><img src="shot_gruppe.png"><figcaption>Gruppenansicht mit Spot, Arbeitsauftrag von Eddie, Wortspeicher zum Antippen und Vorlesen, Tipp-Feld</figcaption></figure>
-<figure><img src="shot_tipp.png"><figcaption>Tippseite der Gruppe mit zwei gestuften Denkanstößen zum Aufdecken und Vorlesen</figcaption></figure></div>"""
+<figure><img src="shot_tipp.png"><figcaption>Tippseite der Gruppe mit einem Tipp zu jeder der vier Aufgaben, zum Aufdecken und Vorlesen</figcaption></figure></div>"""
 
 
 lu_css = """
 h1 { font-family: Fredoka; font-size: 18pt; margin: 0 0 4mm; }
 figure { margin: 0 0 6mm; text-align: center; }
-img { width: 100mm; border: 1px solid #ccc; border-radius: 2mm; }
+img { max-width: 100mm; max-height: 74mm; border: 1px solid #ccc; border-radius: 2mm; }
 figure { margin-bottom: 3mm !important; }
 figcaption { font-size: 10pt; color: #6b645b; margin-top: 1mm; }
 """

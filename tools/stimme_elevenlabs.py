@@ -13,7 +13,7 @@ EDDIE, ERZAEHL = "bIHbv24MWmeRgasZH58o", "cgSgspJ2msm6clMCkdW9"
 MODEL = "eleven_v3"
 
 # Nur für die Stimme: so geschrieben, wie es deutsch klingen soll (angezeigt wird der Originaltext)
-SPRECH = {"„": "", "“": "", "Tipp 1.": "Tipp eins.", "Tipp 2.": "Tipp zwei."}
+SPRECH = {"„": "", "“": "", "Aufgabe 1.": "Aufgabe eins.", "Aufgabe 2.": "Aufgabe zwei.", "Aufgabe 3.": "Aufgabe drei.", "Aufgabe 4.": "Aufgabe vier."}
 def sprech(t):
     for a, b in SPRECH.items():
         t = t.replace(a, b)
@@ -24,7 +24,7 @@ for k, w in enumerate(TEXT["words"], 1):
     jobs[f"w{k}"] = (ERZAEHL, f"Was bedeutet {w['w']}? {w['d']}")
 for i, g in enumerate(TEXT["groups"], 1):
     for k, t in enumerate(g["tips"], 1):
-        jobs[f"g{i}t{k}"] = (ERZAEHL, f"Tipp {k}. {TEXT['tipHeads'][k - 1]} {t}")
+        jobs[f"g{i}t{k}"] = (ERZAEHL, f"Tipp zu Aufgabe {k}. {TEXT['tipHeads'][k - 1]} {t}")
 
 only = set(sys.argv[1].split(",")) if len(sys.argv) > 1 else None
 out = ROOT / "audio"
