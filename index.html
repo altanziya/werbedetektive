@@ -125,7 +125,9 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; }
 .tips .head b { flex: 1; font-size: 23px; }
 .tips .head small { font-family: Andika, sans-serif; font-weight: 400; font-size: 19px; color: var(--muted); }
 .tips .open { margin-top: 12px; width: 100%; border: 3px solid #3b2a1e; box-shadow: 0 3px 0 #3b2a1e; border-radius: 14px; padding: 12px; font-size: 21px; font-weight: 700; background: #fff4cf; }
-.tips .text { margin: 12px 0 0; font-size: 22px; background: #fff8e3; border-radius: 12px; padding: 12px 14px; }
+.tips .text { margin: 12px 0 0; font-size: 22px; background: #fff8e3; border-radius: 12px; padding: 12px 14px 12px 40px; display: flex; flex-direction: column; gap: 8px; }
+.ws { display: flex; flex-wrap: wrap; gap: 8px; }
+.ws span { border: 2px dashed #3b2a1e; border-radius: 12px; padding: 6px 14px; font-size: 21px; font-weight: 700; background: #fff; }
 .tips .home { align-self: center; border: 4px solid #3b2a1e; box-shadow: 0 4px 0 #3b2a1e; border-radius: 16px; padding: 14px 22px; font-size: 22px; font-weight: 700; background: var(--gc); color: #fff; }
 
 /* Sperre */
@@ -161,7 +163,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; }
     </div>
   </header>
   <nav class="tiles" id="tiles"></nav>
-  <p class="foot">Diese Seite speichert nichts und sammelt keine Daten. · Version 9</p>
+  <p class="foot">Diese Seite speichert nichts und sammelt keine Daten. · Version 10</p>
 </div>
 
 <div id="group" class="wrap" hidden>
@@ -194,6 +196,10 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; }
 
     <section class="side2">
       <div class="box">
+        <h2>✏️ Wortspeicher</h2>
+        <div class="ws" id="ws"></div>
+      </div>
+      <div class="box">
         <h2>📖 Was bedeutet …?</h2>
         <div class="words" id="words"></div>
         <div class="def" id="def" hidden><p id="defText"></p><button class="say" id="defSay">🔊 Vorlesen</button></div>
@@ -218,38 +224,38 @@ const TEXT = /*TEXT*/{
     {"w": "Versprechen", "d": "Die Werbung verspricht dir, was das Produkt für dich tun soll. Zum Beispiel, dass mit einem bestimmten Shampoo die Haare schneller wachsen."},
     {"w": "übertrieben", "d": "Übertrieben heißt, etwas wird viel größer, schneller oder besser gezeigt, als es in echt ist. Zum Beispiel eine Limo, mit der man fliegen kann."}
   ],
-  "tipHeads": ["Beschreibt, was ihr in der Werbung seht.", "Nennt, was in der Werbung echt ist.", "Nennt, was übertrieben oder erfunden ist.", "Erklärt, was die Werbung verspricht."],
+  "tipHeads": ["Nennt, was verkauft wird.", "Erklärt, was die Werbung verspricht.", "Nennt, was übertrieben oder erfunden ist.", "Nennt, was echt ist."],
   "groups": [
-    { "sym": "●", "tips": [
-      "Wer spielt in der Werbung mit? Was halten die Kinder in den Händen? Lest den Namen auf der Verpackung.",
-      "Schaut auf die Happy-Meal-Tüte auf eurem Tisch. Was ist wirklich drin? Was davon seht ihr auch in der Werbung?",
-      "Was passiert in der Werbung mit der Box? Könnte das bei euch zu Hause auch passieren?",
-      "Wie fühlen sich die Kinder, als sie das Happy Meal öffnen? Was soll das Happy Meal euch also schenken? Warum zeigt die Werbung dafür eine Zauberwelt?"] },
-    { "sym": "▲", "tips": [
-      "Wo steht die Kamera? Wer trinkt aus der Flasche und wer schaut zu? Lest, was auf der Flasche steht.",
-      "Schaut auf die Flasche auf eurem Tisch. Was steht auf dem Etikett? Was davon seht ihr auch in der Werbung?",
-      "Schaut auf das Ende vom Spot. Was fliegt da durch die Luft? Findet ihr das auch in eurer Flasche?",
-      "Warum trinkt die Mama heimlich, obwohl es nicht ihre Milch ist? Was will die Werbung euch über den Geschmack sagen? Hört auf den Satz ganz am Ende."] },
-    { "sym": "■", "tips": [
-      "Wer spielt in der Werbung mit? Was trinkt das Mädchen? Lest den Namen auf der Flasche.",
-      "Schaut auf die Flasche auf eurem Tisch. Was ist wirklich in einem Orangensaft drin? Lest auf dem Etikett nach.",
-      "Was machen die Kuscheltiere und Puppen in der Werbung? Was davon können sie in echt?",
-      "Was passiert, als der Saft ins Spiel kommt? Was soll der Saft für euch tun? Hört auch auf den letzten Satz."] },
-    { "sym": "★", "tips": [
-      "Was essen die Kinder? Wie heißt die Marke? Schaut auf die Tüte am Ende vom Spot.",
-      "Dreht die Tüte auf eurem Tisch um. Was steht auf der Rückseite? Was ist wirklich in den Bonbons drin?",
-      "Was passiert mit den Wangen der Kinder? Wie wäre das in echt?",
-      "Schaut euch die Wörter am Ende vom Spot an. Was soll an den Bonbons gut für euch sein? Passt das zu dem, was auf der Tüte steht?"] },
-    { "sym": "♥", "tips": [
-      "Wer rennt in der Werbung um die Wette? Was hat der Mann an den Füßen? Wie heißt die Marke?",
-      "Schaut euch den Schuh auf eurem Tisch an. Wofür sind Laufschuhe wirklich gut?",
-      "Wer ist in der Werbung schneller, der Mann oder der Gepard? Wie schnell kann ein Mensch in echt laufen?",
-      "Was schafft der Mann mit den Schuhen? Was sollen die Schuhe also für euch tun? Warum zeigt die Werbung dafür einen Gepard?"] },
-    { "sym": "◆", "tips": [
-      "Wer spielt in der Werbung mit? Was kaut der Junge? Lest den Namen auf der Packung.",
-      "Schaut auf die Packung auf eurem Tisch. Was kann Kaugummikauen für die Zähne wirklich tun?",
-      "Was macht der Junge mit dem Teller? Was würde in echt passieren, wenn ihr in einen Teller beißt?",
-      "Was soll der Kaugummi mit euren Zähnen machen? Schaut auf den Satz unten am Ende vom Spot. Warum zeigt die Werbung dafür einen Teller?"] }
+    { "sym": "●", "ws": ["Happy Meal", "Spielfigur", "Regenbogen", "Dschungel", "Magie", "Zauber", "öffnen"], "tips": [
+      ["Was halten die Kinder in den Händen?", "Was ist in der Box drin?", "Lest den Namen auf der Verpackung."],
+      ["Was passiert, als das Happy Meal geöffnet wird?", "Wie fühlen sich die Kinder?", "Was soll das Happy Meal machen können?"],
+      ["Öffnet das Happy Meal vor euch.", "Was ist passiert?", "Was ist anders als in der Werbung?"],
+      ["Was findet ihr in eurem Happy Meal, das es auch in der Werbung gibt?", "Wie fühlt ihr euch, wenn ihr ein Happy Meal bekommt?"]] },
+    { "sym": "▲", "ws": ["Milch", "Kuh", "Schokolade", "Geräusch", "Deckel", "Kühlschrank", "Flasche", "öffnen"], "tips": [
+      ["Was holt die Frau aus dem Kühlschrank?", "Was ist in der Flasche drin?", "Lest den Namen auf der Flasche."],
+      ["Was passiert, als die Frau die Flasche öffnet?", "Wie fühlt sich die Frau?"],
+      ["Öffnet den Deckel der Flasche.", "Was ist passiert?", "Was ist anders als in der Werbung?"],
+      ["Was ist wirklich in der Milch drin, das auch die Werbung zeigt?", "Wie könnte die Milch schmecken?"]] },
+    { "sym": "■", "ws": ["Orangensaft", "Mädchen", "Spielzeug", "Kuscheltiere", "lebendig", "Vitamine"], "tips": [
+      ["Was trinkt das Mädchen?", "Lest den Namen auf der Flasche."],
+      ["Was soll gesund sein?", "Was passiert mit den Kuscheltieren?"],
+      ["Was passiert mit den Kuscheltieren? Geht das in echt?", "Was ist außer Vitaminen vielleicht noch im Orangensaft?"],
+      ["Schaut auf die Flasche auf eurem Tisch.", "Was ist in einem Orangensaft drin?", "Lest das Etikett."]] },
+    { "sym": "★", "ws": ["Wange", "Bonbon", "Süßigkeit"], "tips": [
+      ["Was essen die Kinder?", "Wie heißt die Marke?", "Schaut auf die Tüte am Ende der Werbung."],
+      ["Schaut euch die Wörter am Ende der Werbung an.", "Was soll gut für euch sein?", "Passt das zu dem, was auf der Tüte steht?"],
+      ["Was passiert mit den Wangen der Kinder?", "Was würde passieren, wenn ihr ein Bonbon esst?"],
+      ["Welches Geräusch machen die Bonbons, wenn man sie kaut?", "Was zeigt die Werbung, das ihr auch an der Tüte erkennen könnt?"]] },
+    { "sym": "♥", "ws": ["Gepard", "Gazelle", "rennen", "schnell", "Laufschuh"], "tips": [
+      ["Wer rennt in der Werbung um die Wette?", "Was hat der Mann an den Füßen?", "Wie heißt die Marke?"],
+      ["Was schafft der Mann mit den Schuhen?"],
+      ["Wer ist in der Werbung schneller?", "Wie schnell kann ein Mensch in echt laufen?"],
+      ["Schaut euch den Schuh auf eurem Tisch an.", "Wofür sind Laufschuhe gut?"]] },
+    { "sym": "◆", "ws": ["Kaugummi", "Teller", "Zähne", "beißen", "stark"], "tips": [
+      ["Was kaut der Junge?", "Lest den Namen auf der Packung."],
+      ["Was soll der Kaugummi mit euren Zähnen machen?", "Schaut auf den Satz unten am Ende der Werbung."],
+      ["Was macht der Junge mit dem Teller?", "Was würde mit euren Zähnen passieren, wenn ihr in einen Teller beißt?"],
+      ["Schaut auf die Packung auf eurem Tisch.", "Was kann Kaugummikauen wirklich für die Zähne tun?"]] }
   ]
 }/*TEXT*/;
 const GROUPS = TEXT.groups;
@@ -362,10 +368,10 @@ function renderTips(i) {
     const el = document.createElement('article');
     el.className = 'box';
     el.innerHTML = `<div class="head"><span class="num">${k + 1}</span><b>Tipp zu Aufgabe ${k + 1}<br><small>${TEXT.tipHeads[k]}</small></b><button class="say">🔊 Vorlesen</button></div>
-      <button class="open">💡 Tipp ${k + 1} aufdecken</button><p class="text" hidden>${t}</p>`;
+      <button class="open">💡 Tipp ${k + 1} aufdecken</button><ul class="text" hidden>${t.map((x) => `<li>${x}</li>`).join('')}</ul>`;
     const text = el.querySelector('.text');
     el.querySelector('.open').onclick = (e) => { e.currentTarget.hidden = true; text.hidden = false; };
-    el.querySelector('.say').onclick = (e) => { el.querySelector('.open').hidden = true; text.hidden = false; say(`g${i + 1}t${k + 1}`, `Tipp zu Aufgabe ${k + 1}. ${TEXT.tipHeads[k]} ${t}`, e.currentTarget); };
+    el.querySelector('.say').onclick = (e) => { el.querySelector('.open').hidden = true; text.hidden = false; say(`g${i + 1}t${k + 1}`, `Tipp zu Aufgabe ${k + 1}. ${TEXT.tipHeads[k]} ${t.join(' ')}`, e.currentTarget); };
     v.appendChild(el);
   });
   const back = document.createElement('button');
@@ -385,7 +391,7 @@ async function renderGroup(i, tips) {
   $('intro').hidden = $('main').hidden = tips;
   $('tipView').hidden = !tips;
   if (tips) { vid.pause(); renderTips(i); }
-  else renderWords();
+  else { renderWords(); $('ws').innerHTML = g.ws.map((w) => `<span>${w}</span>`).join(''); }
   show('group');
   if (shown === i) return;
   shown = i;

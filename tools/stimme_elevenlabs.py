@@ -24,7 +24,7 @@ for k, w in enumerate(TEXT["words"], 1):
     jobs[f"w{k}"] = (ERZAEHL, f"Was bedeutet {w['w']}? {w['d']}")
 for i, g in enumerate(TEXT["groups"], 1):
     for k, t in enumerate(g["tips"], 1):
-        jobs[f"g{i}t{k}"] = (ERZAEHL, f"Tipp zu Aufgabe {k}. {TEXT['tipHeads'][k - 1]} {t}")
+        jobs[f"g{i}t{k}"] = (ERZAEHL, f"Tipp zu Aufgabe {k}. {TEXT['tipHeads'][k - 1]} {' '.join(t)}")
 
 only = set(sys.argv[1].split(",")) if len(sys.argv) > 1 else None
 out = ROOT / "audio"

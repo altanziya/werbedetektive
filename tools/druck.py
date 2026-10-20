@@ -12,10 +12,10 @@ SPOTS = ["McDonald's Happy Meal", "Müllermilch Schoko", "hohes C", "nimm2 soft"
 G = [(c, g["sym"], s, g["tips"]) for c, g, s in zip(COLORS, TEXT["groups"], SPOTS)]  # Farbe, Symbol, Spot, Tipps 1 bis 4 (wie auf der Seite)
 # Aufgaben nach Anforderungsbereichen: Titel wie die Tipp-Überschriften auf der Seite, Operator fett
 Q = [
-    ("I", TEXT["tipHeads"][0], "Wer spielt mit? Was passiert? Welches Produkt wird gezeigt?", ["In der Werbung sieht man …", "Das Produkt heißt …"]),
-    ("I", TEXT["tipHeads"][1], "Was gibt es wirklich? Schaut auch auf das Produkt auf eurem Tisch.", ["Echt ist, dass …"]),
-    ("I", TEXT["tipHeads"][2], "Was kann es in echt nicht geben?", ["Erfunden ist, dass …"]),
-    ("II", TEXT["tipHeads"][3], "Was soll das Produkt für euch tun? Warum zeigt die Werbung etwas Erfundenes?", ["Die Werbung verspricht, dass …", "Sie zeigt etwas Erfundenes, damit …"]),
+    ("I", TEXT["tipHeads"][0], "Welches Produkt wird gezeigt? Wie heißt die Marke?", ["Verkauft wird …", "Die Marke heißt …"]),
+    ("II", TEXT["tipHeads"][1], "Was soll das Produkt für euch tun? Warum zeigt die Werbung etwas Erfundenes?", ["Die Werbung verspricht, dass …", "Sie zeigt etwas Erfundenes, damit …"]),
+    ("I", TEXT["tipHeads"][2], "Was kann es in echt nicht geben? Vergleicht mit dem Produkt auf eurem Tisch.", ["Erfunden ist, dass …"]),
+    ("I", TEXT["tipHeads"][3], "Was gibt es wirklich? Schaut auch auf das Produkt auf eurem Tisch.", ["Echt ist, dass …"]),
 ]
 op = lambda t: "<b>{}</b>,{}".format(*t.split(",", 1)) if "," in t.split()[0] else f"<b>{t}</b>"
 EH = [  # Erwartungshorizont der LiV
@@ -118,7 +118,7 @@ def tippkarten():
         cards = ""
         for j in (i, i + 1):
             c, s, spot, tips = G[j]
-            items = "".join(f'<li><b>Tipp zu Aufgabe {k}</b> <i>{TEXT["tipHeads"][k - 1]}</i><br>{t}</li>' for k, t in enumerate(tips, 1))
+            items = "".join(f'<li><b>Tipp zu Aufgabe {k}</b> <i>{TEXT["tipHeads"][k - 1]}</i><br>{'<br>'.join(t)}</li>' for k, t in enumerate(tips, 1))
             cards += f'<div class="card" style="border-color:{c}"><div class="top"><span class="sym s" style="background:{c}">{s}</span> 💡 Tippkarte Gruppe {j + 1}<span class="spot">{spot}</span></div><ul>{items}</ul><div class="cut">Reservekarte, falls das iPad streikt</div></div>'
         pages += f'<div class="page">{cards}</div>'
     return pages
@@ -130,7 +130,7 @@ tipp_css = """
 .top { font-size: 20pt; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .s { width: 34px; height: 34px; border-radius: 50%; color: #fff; display: inline-grid; place-items: center; font-size: 18pt; }
 .spot { margin-left: auto; font-size: 10pt; font-weight: 400; color: #8a8273; }
-ul { list-style: none; padding: 0; margin: 4mm 0 0; display: flex; flex-direction: column; gap: 3.5mm; font-size: 13.5pt; line-height: 1.28; }
+ul { list-style: none; padding: 0; margin: 4mm 0 0; display: flex; flex-direction: column; gap: 2.5mm; font-size: 12.5pt; line-height: 1.22; }
 i { color: #6b645b; }
 .cut { margin-top: auto; font-size: 9pt; color: #8a8273; text-align: right; }
 """
